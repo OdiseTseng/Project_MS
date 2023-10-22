@@ -3,6 +3,7 @@ package com.ncsist.sstp.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ncsist.sstp.server.handler.ClientHandler;
 import com.ncsist.sstp.utils.func.SHAEncoder;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -51,6 +52,11 @@ public class LoginController {
             try {
                 JsonNode jsonNode = objectMapper.readTree(jsonResponse);
                 int level = jsonNode.get("level").asInt();
+
+                if(level > 0){
+                    ClientHandler.sendMsg("chk");
+                }
+
                 if (level == 1003) {
                     System.out.println("1你是學生!");
                     FXMLLoader esLoader = new FXMLLoader(getClass().getResource("/es.fxml"));

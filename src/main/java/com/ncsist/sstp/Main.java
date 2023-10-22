@@ -1,6 +1,7 @@
 package com.ncsist.sstp;
 
 import com.ncsist.sstp.controller.LoginController;
+import com.ncsist.sstp.server.ClientSocket;
 import com.ncsist.sstp.utils.text.CommonString;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +13,8 @@ import javafx.stage.StageStyle;
 public class Main extends Application {
 
     public static void main(String[] args) {
+
+        new Thread(ClientSocket::startNettyClient).start();
         launch(args);
 
     }

@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class HttpClientPost {
     public static String sendLoginRequest(String username, String password) {
-        String apiUrl = "http://localhost:8080/user2/login";
+        String apiUrl = "http://localhost:8080/user/login";
         String requestBody = "{\"username\":\"" + username + "\", \"password\":\"" + password + "\"}";
 
         try {
