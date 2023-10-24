@@ -1,4 +1,4 @@
-package com.ncsist.sstp.vo;
+package com.ncsist.sstp.model;
 
 import lombok.Data;
 
@@ -12,4 +12,8 @@ public class MsgDTO implements Serializable {
 	private String from;
 
 	private String msg;
+
+	private long level;
+
+	private int team;
 }

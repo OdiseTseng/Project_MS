@@ -1,6 +1,6 @@
 package com.ncsist.sstp.server;
 
-import com.ncsist.sstp.server.handler.ClientHandler;
+import com.ncsist.sstp.server.handler.NettyClientHandler;
 import com.ncsist.sstp.vo.Properties;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -15,13 +15,13 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 //import org.simulation.vo.properties.PropertiesVO;
 
 
-public class ClientSocket {
+public class NettyClientSocket {
     private String apiUrl = "http://";
 //	private String apiUrl = "http://localhost:8080/";
 //	String apiUrl = "http://192.168.50.219:8080/";
 //	String apiUrl = "http://192.168.50.89:8080/";
 
-    public ClientSocket() {
+    public NettyClientSocket() {
         apiUrl += Properties.getServerIp() + ":" + Properties.getServerPort() + "/";
 
     }
@@ -40,7 +40,7 @@ public class ClientSocket {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             //add client channel processor
-                            ch.pipeline().addLast(new ClientHandler());
+                            ch.pipeline().addLast(new NettyClientHandler());
                         }
                     });
 //            LogDataHelper.writeLog(CommonFunction.getCurrentFunctionName(), "Client ready");

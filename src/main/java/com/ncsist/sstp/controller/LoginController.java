@@ -3,8 +3,11 @@ package com.ncsist.sstp.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ncsist.sstp.server.handler.ClientHandler;
+import com.ncsist.sstp.model.NettyDTO;
+import com.ncsist.sstp.model.UserDTO;
+import com.ncsist.sstp.server.controller.NettyClientMsgController;
 import com.ncsist.sstp.utils.func.SHAEncoder;
+import com.ncsist.sstp.utils.text.CommonString;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -44,22 +47,32 @@ public class LoginController {
         String password = passwordField.getText();
         password = SHAEncoder.getSHA256(password);
         System.out.println("password : " + password);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(username);
+        userDTO.setPassword(password);
+        userDTO.setCtxId(NettyClientMsgController.getClientCtxId());
         // 創建JSON數據，這只是一個示例，實際上需要根據你的需求創建正確的JSON數據
-        String jsonResponse = HttpClientPost.sendLoginRequest(username, password);
+//        String jsonResponse = HttpClientPost.sendLoginRequest(username, password);
+        String jsonResponse = HttpClientPost.sendLoginRequest(userDTO);
         System.out.println("jsonResponse : " + jsonResponse);
         if (jsonResponse != null && !jsonResponse.isEmpty() && jsonResponse.startsWith("{")) {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+                NettyDTO nettyDTO = objectMapper.readValue(jsonResponse, NettyDTO.class);
+                System.out.println("nettyDTO : " + nettyDTO);
                 int level = jsonNode.get("level").asInt();
 
                 if(level > 0){
-                    ClientHandler.sendMsg("chk");
+//                    NettyClientHandler.sendMsg("chk");
                 }
 
-                if (level == 1003) {
+                //for demo
+                level+=1000;
+                if (level == 1003 || level == 1004) {
                     System.out.println("1你是學生!");
-                    FXMLLoader esLoader = new FXMLLoader(getClass().getResource("/es.fxml"));
+                    FXMLLoader esLoader = new FXMLLoader(getClass().getResource(CommonString.PATH_XML + CommonString.XML_ES));
                     Parent esRoot = esLoader.load();
                     Scene esScene = new Scene(esRoot);
                     EsController esController = esLoader.getController();
@@ -69,13 +82,14 @@ public class LoginController {
                     primaryStage.setTitle("ES");
                 } else if (level == 1002) {
                     System.out.println("2你是教官");
-                    FXMLLoader msLoader = new FXMLLoader(getClass().getResource("/ms.fxml"));
+                    FXMLLoader msLoader = new FXMLLoader(getClass().getResource(CommonString.PATH_XML + CommonString.XML_MS));
                     Parent msRoot = msLoader.load();
                     Scene msScene = new Scene(msRoot);
 
                     MsController msController = msLoader.getController();
                     primaryStage.setScene(msScene);
                     primaryStage.setTitle("MS");
+//                    msController.initializeUserData(jsonNode);
                 } else {
                     System.out.println("都不是1跟2");
                 }
