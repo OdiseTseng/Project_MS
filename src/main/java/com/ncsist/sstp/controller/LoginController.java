@@ -69,7 +69,8 @@ public class LoginController {
                 }
 
                 //for demo
-                level+=1000;
+//                level+=1000;
+
                 if (level == 1003 || level == 1004) {
                     System.out.println("1你是學生!");
                     FXMLLoader esLoader = new FXMLLoader(getClass().getResource(CommonString.PATH_XML + CommonString.XML_ES));

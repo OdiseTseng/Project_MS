@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ncsist.sstp.model.MsgDTO;
 import com.ncsist.sstp.model.NettyDTO;
+import com.ncsist.sstp.utils.text.NettyCode;
 
-public class NettyClientLoginService {
+public class NettyClientCommonService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public MsgDTO getClientMsg(String msg){
+    public MsgDTO toMsgDTO(String msg){
         MsgDTO msgDTO;
         try {
             msgDTO = objectMapper.readValue(msg, MsgDTO.class);
@@ -31,7 +32,7 @@ public class NettyClientLoginService {
         return msgDTO;
     }
 
-    public NettyDTO msgToNettyDTO(String msg){
+    public NettyDTO toNettyDTO(String msg){
         NettyDTO nettyDTO;
         try {
             nettyDTO = objectMapper.readValue(msg, NettyDTO.class);
@@ -41,6 +42,53 @@ public class NettyClientLoginService {
         }
         return nettyDTO;
   }
+
+    public MsgDTO treatMsgDTO(int cmd, String from, String msg){
+        System.out.println("treatMsgDTO : cmd= " + cmd + " from= " + from + " msg= " + msg);
+
+        MsgDTO msgDTO = new MsgDTO();
+
+        switch (cmd) {
+//            case NettyCode.CMD_CONNECT -> {
+//
+//            }
+
+//            case NettyCode.CMD_DISCONNECT -> {
+//
+//            }
+
+//            case NettyCode.CMD_LOGIN -> {
+//
+//            }
+//
+//            case NettyCode.CMD_LOGOUT -> {
+//
+//            }
+
+            case NettyCode.CMD_NORMAL_OTHER_MSG -> {
+
+            }
+
+            case NettyCode.CMD_OTHER_CONNECT -> {
+
+            }
+
+            case NettyCode.CMD_OTHER_DISCONNECT -> {
+
+            }
+
+            case NettyCode.CMD_OTHER_LOGIN -> {
+                //show from
+            }
+
+            case NettyCode.CMD_OTHER_LOGOUT -> {
+                //show from
+            }
+
+        }
+
+        return msgDTO;
+    }
 
 
 }

@@ -2,14 +2,13 @@ package com.ncsist.sstp.server.controller;
 
 import com.ncsist.sstp.model.MsgDTO;
 import com.ncsist.sstp.model.NettyDTO;
-import com.ncsist.sstp.server.service.NettyClientLoginService;
+import com.ncsist.sstp.server.service.NettyClientCommonService;
 import com.ncsist.sstp.utils.text.NettyCode;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.CharsetUtil;
 import lombok.Getter;
 import lombok.Setter;
-import org.python.antlr.ast.Str;
 
 public class NettyClientMsgController {
 
@@ -22,7 +21,7 @@ public class NettyClientMsgController {
     private static NettyDTO nettyDTO = null;
 
     public ChannelHandlerContext ctx;
-    public NettyClientLoginService nettyClientLoginService = new NettyClientLoginService();
+    public NettyClientCommonService nettyClientCommonService = new NettyClientCommonService();
 
     public void setCtx(ChannelHandlerContext sCtx){
         ctx = sCtx;
@@ -30,7 +29,7 @@ public class NettyClientMsgController {
 
     public MsgDTO parseToMsgDTO(String msg){
 
-        return nettyClientLoginService.getClientMsg(msg);
+        return nettyClientCommonService.toMsgDTO(msg);
     }
 
     public MsgDTO parseMsgDTO(int cmdCode,
@@ -39,7 +38,7 @@ public class NettyClientMsgController {
                                  long level,
                                  int team){
 
-        return nettyClientLoginService.createMsgDTO(cmdCode, msg, name, level, team);
+        return nettyClientCommonService.createMsgDTO(cmdCode, msg, name, level, team);
     }
 
 
@@ -47,7 +46,7 @@ public class NettyClientMsgController {
     public void sendMsg(String msg){
         System.out.println("sendMsg : " + msg);
 
-        nettyClientLoginService.createMsgDTO(NettyCode.CMD_NORMAL_MSG, msg, clientCtxId, 0L, 0);
+        nettyClientCommonService.createMsgDTO(NettyCode.CMD_NORMAL_MSG, msg, clientCtxId, 0L, 0);
         ctx.writeAndFlush( Unpooled.copiedBuffer(msg, CharsetUtil.UTF_8));
     }
 
@@ -58,37 +57,50 @@ public class NettyClientMsgController {
         ctx.writeAndFlush( Unpooled.copiedBuffer( cmdMsg, CharsetUtil.UTF_8));
     }
 
-    public void treatMsg(String msg){
-        MsgDTO msgDTO = nettyClientLoginService.getClientMsg(msg);
+    public void treatMsg(String sourceMsg){
+        System.out.println("treatMsg : " + sourceMsg);
+        MsgDTO msgDTO = nettyClientCommonService.toMsgDTO(sourceMsg);
 
-        String treatMsg = msgDTO.getMsg();
+        int cmd = msgDTO.getCmd();
+        int cmdType = cmd / 10000;
+        String msg = msgDTO.getMsg();
         String from = msgDTO.getFrom();
-        Long level = msgDTO.getLevel();
+        long level = msgDTO.getLevel();
         int team = msgDTO.getTeam();
+        System.out.println("cmd : "  + cmd);
+        System.out.println("cmdType : "  + cmdType);
+        System.out.println("msg : "  + msg);
+        System.out.println("from : "  + from);
+        System.out.println("level : "  + level);
+        System.out.println("team : "  + team);
 
 
-        int msgCode = msgDTO.getCmd();
-        int msgType = msgCode / 1000;
+        switch (cmdType) {
+//            case 89 -> {
+//                if(cmd == NettyCode.CMD_NORMAL_MSG){
+//                    //顯示訊息
+//                }
+//            }
 
-        switch (msgType) {
-            case 89 -> {
-                if(msgCode == NettyCode.CMD_NORMAL_MSG){
-
+            case NettyCode.CMD_NORMAL,NettyCode.CMD -> {
+                if(cmd == NettyCode.CMD_CONNECT){
+                    setClientCtxId(msg);
+                    System.out.println("check set clientCtxId : " + getClientCtxId());
+                }else{
+                    nettyClientCommonService.treatMsgDTO(cmd, from, msg);
                 }
-            }
-            case 90 -> {
-                if(msgCode == NettyCode.CMD_CONNECT){
-                    setClientCtxId(treatMsg);
-                }
-                if(msgCode == NettyCode.CMD_LOGIN){
-                    nettyDTO = nettyClientLoginService.msgToNettyDTO(treatMsg);
-                }
-            }
-            case 91 -> {
+
+//                if(cmd == NettyCode.CMD_LOGIN){
+//                    if(clientCtxId.equals(msg)){
+//                        nettyDTO = nettyClientCommonService.toNettyDTO(msg);
+//                    }else{
+//                        //提示別的使用者登入
+//                    }
+//                }
 
             }
 
-            case 92 -> {
+            case NettyCode.TEAM -> {
 
             }
         }

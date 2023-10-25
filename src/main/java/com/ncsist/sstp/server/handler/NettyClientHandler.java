@@ -52,7 +52,8 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 		System.out.println("收到Server " + ctx.channel().remoteAddress() + " 的訊息：" + message);
 
 //		MsgDTO msgDTO = nettyClientController.getClientMsg(message);
-		MsgDTO msgDTO = nettyClientMsgController.parseToMsgDTO(message);
+//		MsgDTO msgDTO = nettyClientMsgController.parseToMsgDTO(message);
+		nettyClientMsgController.treatMsg(message);
 //
 //		clientCtxId = msgDTO.getMsg();
 

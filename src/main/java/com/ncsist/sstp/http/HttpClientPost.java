@@ -1,7 +1,9 @@
 package com.ncsist.sstp.http;
 
 import com.ncsist.sstp.model.UserDTO;
+import com.ncsist.sstp.server.controller.NettyClientMsgController;
 import com.ncsist.sstp.server.handler.NettyClientHandler;
+import com.ncsist.sstp.utils.func.DTOParser;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -13,7 +15,7 @@ import java.net.URL;
 public class HttpClientPost {
     public static String sendLoginRequest(String username, String password) {
         String apiUrl = "http://localhost:8080/user/login";
-        String ctxId = NettyClientHandler.getCtxId();
+        String ctxId = NettyClientMsgController.getClientCtxId();
         String requestBody = "{\"username\":\"" + username + "\", \"password\":\"" + password + "\", \"ctx\":\"" + ctxId+ "\"}";
 
         try {
@@ -46,9 +48,10 @@ public class HttpClientPost {
     }
 
     public static String sendLoginRequest(UserDTO userDTO) {
+        System.out.println("sendLoginRequest : " + userDTO);
         String apiUrl = "http://localhost:8080/user/login";
-        String ctxId = NettyClientHandler.getCtxId();
-        String requestBody = userDTO.toString();
+        String requestBody = DTOParser.parseDTOToString(userDTO);
+        System.out.println("requestBody : " + requestBody);
 
         try {
             URL url = new URL(apiUrl);
