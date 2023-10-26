@@ -7,10 +7,15 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.InputStream;
+
 public class Main extends Application {
+
+    public static Font customFont = null;
 
     public static void main(String[] args) {
 
@@ -24,6 +29,12 @@ public class Main extends Application {
         System.out.println(" start ");
         primaryStage.initStyle(StageStyle.UTILITY);
         primaryStage.setResizable(false);
+
+        if(customFont == null){
+            InputStream ttfPath = getClass()
+                    .getResourceAsStream( "/ttf/TaipeiSansTCBeta-Bold.ttf" );
+            customFont = Font.loadFont(ttfPath, 14);
+        }
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(CommonString.PATH_XML + CommonString.XML_LOGIN));
         Parent root = fxmlLoader.load();

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="buttonPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="96.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="buttonView" fitHeight="43.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/ms/team_course/button/課程設定1預設.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="buttonLabel" prefHeight="43.0" prefWidth="96.0" text="Label" textAlignment="CENTER">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

@@ -14,7 +14,7 @@ import io.netty.util.CharsetUtil;
 
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 
-	NettyClientMsgController nettyClientMsgController = new NettyClientMsgController();
+	NettyClientMsgController nettyClientMsgController = NettyClientMsgController.getInstance();
 
 	@Override
 	public void channelRegistered(ChannelHandlerContext ctx) throws Exception {

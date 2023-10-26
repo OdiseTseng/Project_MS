@@ -19,6 +19,9 @@ public class HttpClientGetData {
             connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("GET");
+//            String sessionId = "JSESSIONID=<" + SessionStorage.getSessionId() + ">";
+            String sessionId = "JSESSIONID=" + SessionStorage.getSessionId();
+            connection.setRequestProperty("Cookie" , sessionId);
 
             int responseCode = connection.getResponseCode();
             System.out.println("Response Code: " + responseCode);
@@ -33,11 +36,6 @@ public class HttpClientGetData {
             reader.close();
 
             System.out.println("Response Data: " + response.toString());
-
-            ObjectMapper ob = new ObjectMapper();
-            Course[] courses = ob.readValue(response.toString(), Course[].class);//array
-            List<String> sourseNameList = Arrays.stream(courses).map(Course::getCourseName).toList();//
-            System.out.println("aaaaaaaaaaaaaa"+sourseNameList);
 
             connection.disconnect();
             return response.toString();

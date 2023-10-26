@@ -12,16 +12,30 @@ import lombok.Setter;
 
 public class NettyClientMsgController {
 
+    private static NettyClientMsgController controller;
+
 
     @Getter
     @Setter
     private static String clientCtxId = "";
 
     @Getter
-    private static NettyDTO nettyDTO = null;
+    @Setter
+    private static NettyDTO nettyDTO;
 
     public ChannelHandlerContext ctx;
-    public NettyClientCommonService nettyClientCommonService = new NettyClientCommonService();
+    public NettyClientCommonService nettyClientCommonService;
+
+    private NettyClientMsgController(){
+        nettyClientCommonService = new NettyClientCommonService();
+    }
+
+    public static NettyClientMsgController getInstance(){
+        if(controller == null){
+            controller = new NettyClientMsgController();
+        }
+        return controller;
+    }
 
     public void setCtx(ChannelHandlerContext sCtx){
         ctx = sCtx;
@@ -50,9 +64,11 @@ public class NettyClientMsgController {
         ctx.writeAndFlush( Unpooled.copiedBuffer(msg, CharsetUtil.UTF_8));
     }
 
-    public void sendCMD(String msg){
-        System.out.println("sendCMD() msg");
-        String cmdMsg = "";
+    public void sendCMD(int cmdCode){
+        System.out.println("sendCMD() cmdCode : " + cmdCode);
+        MsgDTO msgDTO = nettyClientCommonService.createMsgDTO(cmdCode);
+        String cmdMsg = nettyClientCommonService.parseDTOToString(msgDTO);
+        System.out.println("sendCMD() cmdMsg : " + cmdMsg);
 
         ctx.writeAndFlush( Unpooled.copiedBuffer( cmdMsg, CharsetUtil.UTF_8));
     }

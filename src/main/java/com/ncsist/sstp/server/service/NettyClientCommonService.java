@@ -21,6 +21,22 @@ public class NettyClientCommonService {
         return msgDTO;
     }
 
+    public MsgDTO createMsgDTO(int cmdCode){
+        return createMsgDTO(cmdCode, "");
+    }
+
+    public MsgDTO createMsgDTO(int cmdCode, String msg){
+        return createMsgDTO(cmdCode, msg, "");
+    }
+
+    public MsgDTO createMsgDTO(int cmdCode, String msg, String fromName){
+        return createMsgDTO(cmdCode, msg, fromName, 0);
+    }
+
+    public MsgDTO createMsgDTO(int cmdCode, String msg, String fromName, long level){
+        return createMsgDTO(cmdCode, msg, fromName, level, 0);
+    }
+
     public MsgDTO createMsgDTO(int cmdCode, String msg, String name, long level, int team){
         MsgDTO msgDTO = new MsgDTO();
         msgDTO.setCmd(cmdCode);
@@ -30,6 +46,19 @@ public class NettyClientCommonService {
         msgDTO.setTeam(team);
 
         return msgDTO;
+    }
+
+    public String parseDTOToString(Object objDTO){
+        String msgString;
+
+        try {
+            msgString = objectMapper.writeValueAsString(objDTO);
+        } catch (JsonProcessingException e) {
+            System.out.println("JsonProcessingException : " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        return msgString;
     }
 
     public NettyDTO toNettyDTO(String msg){

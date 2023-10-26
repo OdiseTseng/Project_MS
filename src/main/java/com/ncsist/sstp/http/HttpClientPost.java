@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class HttpClientPost {
     public static String sendLoginRequest(String username, String password) {
@@ -65,8 +68,25 @@ public class HttpClientPost {
                 outputStream.flush();
             }
 
+//            connection
+
             int responseCode = connection.getResponseCode();
             System.out.println("Response Code: " + responseCode);
+
+            // 取得Cookie標頭
+            Map<String, List<String>> headerFields = connection.getHeaderFields();
+            List<String> cookiesHeader = headerFields.get("Set-Cookie");
+
+            if (cookiesHeader != null) {
+                for (String cookie : cookiesHeader) {
+                    System.out.println("cookie : " + cookie);
+                    if (cookie.startsWith("JSESSIONID")) {
+                        String sessionId = cookie.split(";")[0];
+                        System.out.println("Session ID: " + sessionId);
+                        SessionStorage.setSessionId(sessionId);
+                    }
+                }
+            }
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                 StringBuilder response = new StringBuilder();
@@ -74,6 +94,7 @@ public class HttpClientPost {
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
                 }
+
                 return response.toString();
             }
         } catch (IOException e) {
