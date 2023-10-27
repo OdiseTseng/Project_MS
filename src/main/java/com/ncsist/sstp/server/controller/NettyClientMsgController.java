@@ -3,6 +3,7 @@ package com.ncsist.sstp.server.controller;
 import com.ncsist.sstp.model.MsgDTO;
 import com.ncsist.sstp.model.NettyDTO;
 import com.ncsist.sstp.server.service.NettyClientCommonService;
+import com.ncsist.sstp.server.service.NettyClientTeamService;
 import com.ncsist.sstp.utils.text.NettyCode;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -25,9 +26,11 @@ public class NettyClientMsgController {
 
     public ChannelHandlerContext ctx;
     public NettyClientCommonService nettyClientCommonService;
+    public NettyClientTeamService nettyClientTeamService;
 
     private NettyClientMsgController(){
         nettyClientCommonService = new NettyClientCommonService();
+        nettyClientTeamService = new NettyClientTeamService();
     }
 
     public static NettyClientMsgController getInstance(){
@@ -117,7 +120,7 @@ public class NettyClientMsgController {
             }
 
             case NettyCode.TEAM -> {
-
+                nettyClientTeamService.treatMsgDTO(cmd, from, msg);
             }
         }
     }

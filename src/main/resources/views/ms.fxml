@@ -63,8 +63,23 @@
             <Image url="@../images/O選單底圖.png" />
          </image>
       </ImageView>
+      <ImageView fx:id="courseSelect" fitHeight="60.0" fitWidth="100.0" layoutX="325.0" layoutY="50.0" onMouseClicked="#studentGradeAction" opacity="0.18" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/O選單底圖.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="teamSelect" fitHeight="60.0" fitWidth="100.0" layoutX="425.0" layoutY="50.0" onMouseClicked="#studentGradeAction" opacity="0.22" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/O選單底圖.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="missionSelect" fitHeight="60.0" fitWidth="100.0" layoutX="525.0" layoutY="50.0" onMouseClicked="#studentGradeAction" opacity="0.24" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/O選單底圖.png" />
+         </image>
+      </ImageView>
       <ListView fx:id="courseList" layoutX="315.0" layoutY="188.0" prefHeight="528.0" prefWidth="162.0" visible="false" />
-       <GridPane fx:id="classGridPane" hgap="1.0" layoutX="605.0" layoutY="195.0" prefHeight="528.0" prefWidth="303.0" vgap="1.0">
+       <GridPane fx:id="classGridPane" hgap="1.0" layoutX="350.0" layoutY="195.0" prefHeight="528.0" prefWidth="303.0" vgap="1.0">
        <columnConstraints>
            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

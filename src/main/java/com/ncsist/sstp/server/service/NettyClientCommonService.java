@@ -4,9 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ncsist.sstp.model.MsgDTO;
 import com.ncsist.sstp.model.NettyDTO;
+import com.ncsist.sstp.model.TeamDTO;
 import com.ncsist.sstp.utils.text.NettyCode;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 public class NettyClientCommonService {
+
+
+    @Getter
+    @Setter
+    private List<TeamDTO> teamDTOList;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

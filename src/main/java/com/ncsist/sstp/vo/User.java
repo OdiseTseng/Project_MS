@@ -33,6 +33,14 @@ public class User implements Serializable{
 
 	private Long level;
 
+	private Long grade;
+
+	private String studentWork;
+
+	private String studentUnit;
+
+	private int studentUnitCode;
+
 	private String ip;
 
 	private Long state;
