@@ -4,6 +4,7 @@ import com.ncsist.sstp.model.MsgDTO;
 import com.ncsist.sstp.model.NettyDTO;
 import com.ncsist.sstp.server.service.NettyClientCommonService;
 import com.ncsist.sstp.server.service.NettyClientTeamService;
+import com.ncsist.sstp.utils.func.CodeDecoder;
 import com.ncsist.sstp.utils.text.NettyCode;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -93,15 +94,12 @@ public class NettyClientMsgController {
         System.out.println("level : "  + level);
         System.out.println("team : "  + team);
 
+        String decodeMsg = "";
 
         switch (cmdType) {
-//            case 89 -> {
-//                if(cmd == NettyCode.CMD_NORMAL_MSG){
-//                    //顯示訊息
-//                }
-//            }
 
             case NettyCode.CMD_NORMAL,NettyCode.CMD -> {
+                decodeMsg = CodeDecoder.getCodeMsg("CMD", cmd);
                 if(cmd == NettyCode.CMD_CONNECT){
                     setClientCtxId(msg);
                     System.out.println("check set clientCtxId : " + getClientCtxId());
@@ -120,8 +118,11 @@ public class NettyClientMsgController {
             }
 
             case NettyCode.TEAM -> {
+                decodeMsg = CodeDecoder.getCodeMsg("TEAM", cmd);
                 nettyClientTeamService.treatMsgDTO(cmd, from, msg);
             }
         }
+
+//        System.out.println("decodeMsg : " + decodeMsg);
     }
 }

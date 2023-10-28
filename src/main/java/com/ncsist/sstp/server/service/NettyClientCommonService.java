@@ -88,6 +88,9 @@ public class NettyClientCommonService {
         MsgDTO msgDTO = new MsgDTO();
 
         switch (cmd) {
+            case NettyCode.CMD_NORMAL_MSG -> {
+
+            }
 //            case NettyCode.CMD_CONNECT -> {
 //
 //            }

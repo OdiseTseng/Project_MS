@@ -17,7 +17,7 @@ public class NettyClientTeamService {
 
     @Getter
     @Setter
-    private List<TeamDTO> teamDTOList = new ArrayList<>();
+    private static List<TeamDTO> teamDTOList = new ArrayList<>();
 
 
     public MsgDTO treatMsgDTO(int cmd, String from, String msg){
