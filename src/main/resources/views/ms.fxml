@@ -120,7 +120,7 @@
            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <ImageView fx:id="teamSelect1" fitHeight="267.0" fitWidth="360.0" layoutX="342.0" layoutY="134.0" onMouseClicked="#onTeamSelectedBackAction" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="teamSelect1" fitHeight="267.0" fitWidth="360.0" layoutX="342.0" layoutY="134.0" onMouseClicked="#onTeamSelectedBackAction" onMouseEntered="#onTeamSelectedBackAction" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/ms/team_course/課程設定2第一組.png" />
          </image>
@@ -137,7 +137,7 @@
    </GridPane>
       <ImageView fx:id="teamSelectPick1" fitHeight="30.0" fitWidth="120.0" layoutX="560.0" layoutY="362.0" onMouseClicked="#onTeamPickAction" opacity="0.0" pickOnBounds="true" preserveRatio="true" />
 
-       <ImageView fx:id="teamSelect2" fitHeight="267.0" fitWidth="360.0" layoutX="705.0" layoutY="134.0" onMouseClicked="#onTeamSelectedBackAction" pickOnBounds="true" preserveRatio="true">
+       <ImageView fx:id="teamSelect2" fitHeight="267.0" fitWidth="360.0" layoutX="705.0" layoutY="134.0" onMouseClicked="#onTeamSelectedBackAction" onMouseEntered="#onTeamSelectedBackAction" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/ms/team_course/課程設定2第二組.png" />
          </image>
@@ -155,17 +155,17 @@
 
        <ImageView fx:id="teamSelectPick2" fitHeight="30.0" fitWidth="120.0" layoutX="923.0" layoutY="362.0" onMouseClicked="#onTeamPickAction" opacity="0.0" pickOnBounds="true" preserveRatio="true" />
 
-       <ImageView fx:id="teamSelect3" fitHeight="267.0" fitWidth="360.0" layoutX="342.0" layoutY="409.0" onMouseClicked="#onTeamSelectedBackAction" pickOnBounds="true" preserveRatio="true" visible="false">
+       <ImageView fx:id="teamSelect3" fitHeight="267.0" fitWidth="360.0" layoutX="342.0" layoutY="409.0" onMouseClicked="#onTeamSelectedBackAction" onMouseEntered="#onTeamSelectedBackAction" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../images/ms/team_course/課程設定2第三組.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="teamSelect4" fitHeight="267.0" fitWidth="360.0" layoutX="705.0" layoutY="409.0" onMouseClicked="#onTeamSelectedBackAction" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="teamSelect4" fitHeight="267.0" fitWidth="360.0" layoutX="705.0" layoutY="409.0" onMouseClicked="#onTeamSelectedBackAction" onMouseEntered="#onTeamSelectedBackAction" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../images/ms/team_course/課程設定2第四組.png" />
          </image>
       </ImageView>
-       <ImageView fx:id="teamSelectBack1" fitHeight="360.0" fitWidth="720.0" layoutX="535.0" layoutY="185.0" onMouseExited="#onTeamSelectBackAction" pickOnBounds="true" preserveRatio="true">
+       <ImageView fx:id="teamSelectBack1" fitHeight="360.0" fitWidth="720.0" layoutX="535.0" layoutY="185.0" onMouseClicked="#onTeamSelectBackAction" onMouseExited="#onTeamSelectBackAction" pickOnBounds="true" preserveRatio="true">
            <image>
                <Image url="@../images/ms/team_course/課程設定2組員選擇左上.png" />
            </image>
@@ -175,7 +175,7 @@
             <Image url="@../images/ms/team_course/課程設定2組員選擇右上.png" />
          </image>
       </ImageView>
-      <GridPane fx:id="teamSelectPane" layoutX="580.0" layoutY="230.0" visible="false">
+      <GridPane fx:id="teamSelectGridPane" layoutX="580.0" layoutY="230.0" visible="false">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 
-public class CourseListPane extends Pane{
+public class CoursePane extends Pane{
 //    private HBox content;
 //    private Text name;
 //    private Text price;
@@ -28,7 +28,7 @@ public class CourseListPane extends Pane{
 
     private Image image0 = new Image("./images/ms/team_course/課程設定1預設.png");
 
-    public CourseListPane(Course course) {
+    public CoursePane(Course course) {
         super();
         System.out.println("CourseListPane :  course => " + course);
 

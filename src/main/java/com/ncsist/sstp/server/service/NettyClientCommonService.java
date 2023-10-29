@@ -14,9 +14,9 @@ import java.util.List;
 public class NettyClientCommonService {
 
 
-    @Getter
-    @Setter
-    private List<TeamDTO> teamDTOList;
+//    @Getter
+//    @Setter
+//    private List<TeamDTO> teamDTOList;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

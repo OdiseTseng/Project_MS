@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 
-public class ClassListPane extends Pane{
+public class ClassPane extends Pane{
 
 //    @FXML
     private Label buttonLabel;
@@ -23,7 +23,7 @@ public class ClassListPane extends Pane{
 
     private Image image0 = new Image("./images/ms/team_course/課程設定1預設.png");
 
-    public ClassListPane(long classYear) {
+    public ClassPane(long classYear) {
         super();
         System.out.println("ClassListPane :  classYear => " + classYear);
 

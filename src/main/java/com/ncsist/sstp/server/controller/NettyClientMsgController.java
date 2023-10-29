@@ -2,15 +2,20 @@ package com.ncsist.sstp.server.controller;
 
 import com.ncsist.sstp.model.MsgDTO;
 import com.ncsist.sstp.model.NettyDTO;
+import com.ncsist.sstp.model.TeamDTO;
 import com.ncsist.sstp.server.service.NettyClientCommonService;
 import com.ncsist.sstp.server.service.NettyClientTeamService;
 import com.ncsist.sstp.utils.func.CodeDecoder;
+import com.ncsist.sstp.utils.func.DTOParser;
 import com.ncsist.sstp.utils.text.NettyCode;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.CharsetUtil;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.lang.reflect.Array;
+import java.util.List;
 
 public class NettyClientMsgController {
 
@@ -70,11 +75,31 @@ public class NettyClientMsgController {
 
     public void sendCMD(int cmdCode){
         System.out.println("sendCMD() cmdCode : " + cmdCode);
-        MsgDTO msgDTO = nettyClientCommonService.createMsgDTO(cmdCode);
+        String teamStrs = "";
+        if(cmdCode == NettyCode.TEAM_WAITING_COACH_DISPATCH){
+            teamStrs = DTOParser.parseDTOsToString(nettyClientTeamService.getTeamDTOList().toArray());
+        }
+
+        MsgDTO msgDTO;
+        if(teamStrs.isEmpty()){
+            msgDTO = nettyClientCommonService.createMsgDTO(cmdCode);
+        }else{
+            msgDTO = nettyClientCommonService.createMsgDTO(cmdCode, teamStrs);
+        }
         String cmdMsg = nettyClientCommonService.parseDTOToString(msgDTO);
         System.out.println("sendCMD() cmdMsg : " + cmdMsg);
 
         ctx.writeAndFlush( Unpooled.copiedBuffer( cmdMsg, CharsetUtil.UTF_8));
+    }
+
+    public void sendCMDMsg(int cmdCode, String msg){
+//
+//        System.out.println("sendCMD() cmdCode : " + cmdCode);
+//        MsgDTO msgDTO = nettyClientCommonService.createMsgDTO(cmdCode);
+//        String cmdMsg = nettyClientCommonService.parseDTOToString(msgDTO);
+//        System.out.println("sendCMD() cmdMsg : " + cmdMsg);
+//
+//        ctx.writeAndFlush( Unpooled.copiedBuffer( cmdMsg, CharsetUtil.UTF_8));
     }
 
     public void treatMsg(String sourceMsg){
