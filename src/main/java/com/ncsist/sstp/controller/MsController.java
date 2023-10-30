@@ -101,6 +101,9 @@ public class MsController {
     @FXML
     private ImageView missionIsLeader;
 
+    @FXML
+    private ImageView teamSentNext;
+
 
 
 
@@ -132,6 +135,9 @@ public class MsController {
     @FXML
     private Pane updatePane;
 
+    @FXML
+    private Pane sentPane;
+
     private Image imageBlank = new Image("./images/ms_blank.png");
     private Image imageCourse1 = new Image("./images/ms/team_course/ms_course.png");
     private Image imageCourse2 = new Image("./images/ms/team_course/ms_team.png");
@@ -146,6 +152,11 @@ public class MsController {
 
     private Image imageTeamLeader0 = new Image("./images/ms/team_course/button/隊長.png");
     private Image imageTeamLeader1 = new Image("./images/ms/team_course/button/隊員.png");
+
+
+    private Image imageMission1 = new Image("./images/ms/team_course/button/課程設定4送出預設.png");
+    private Image imageMission2 = new Image("./images/ms/team_course/button/課程設定4送出觸碰.png");
+    private Image imageMission3 = new Image("./images/ms/team_course/button/課程設定4送出點選.png");
 
     private Image tmpImage;
     private int tmpPos = -1;
@@ -199,6 +210,7 @@ public class MsController {
         missionLabelLeader.setFont(Main.customFont);
         missionBack.setVisible(false);
         missionPane.setVisible(false);
+        sentPane.setVisible(false);
         // 初始化程式碼，如果需要的話
     }
 
@@ -347,27 +359,27 @@ public class MsController {
                 if(eventType == MouseEvent.MOUSE_CLICKED){
                     System.out.println("mouse clicked");
 
-                    if(!currentMissionId.equals(selectMissionTeamIndex)){
-                        selectMissionTeamIndex = currentMissionId;
+                    if(!currentMissionId.equals(selectMissionMemberIndex)){
+                        selectMissionMemberIndex = currentMissionId;
                         sourceMissionView.setImage(image2);
-                        if(lastMissionTeamView != null){
-                            lastMissionTeamView.setImage(image0);
+                        if(lastMissionMemberView != null){
+                            lastMissionMemberView.setImage(image0);
                         }
-                        lastMissionTeamView = sourceMissionView;
+                        lastMissionMemberView = sourceMissionView;
                     }else{
-                        selectMissionTeamIndex = "";
+                        selectMissionMemberIndex = "";
                         sourceMissionView.setImage(image1);
-                        lastMissionTeamView = null;
+                        lastMissionMemberView = null;
                     }
 
 
                 }else if(eventType == MouseEvent.MOUSE_ENTERED){
-                    if(!currentMissionId.equals(selectMissionTeamIndex)){
+                    if(!currentMissionId.equals(selectMissionMemberIndex)){
                         sourceMissionView.setImage(image1);
                     }
 
                 }else if(eventType == MouseEvent.MOUSE_EXITED){
-                    if(!currentMissionId.equals(selectMissionTeamIndex)) {
+                    if(!currentMissionId.equals(selectMissionMemberIndex)) {
                         sourceMissionView.setImage(image0);
                     }
 
@@ -813,23 +825,71 @@ public class MsController {
     }
 
     @FXML
-    private void onTeamSelectedMemberAction(MouseEvent event) throws IOException{
+    private void onSelectedMemberAction(MouseEvent event) throws IOException{
 
     }
 
     @FXML
-    private void onTeamLeaderAction(MouseEvent event) throws IOException{
-        System.out.println("onTeamLeaderAction");
+    private void onTeamRoleAction(MouseEvent event) throws IOException{
+        System.out.println("onTeamRoleAction");
         ImageView imageView = (ImageView)event.getSource();
+
+        int currentRole = 0;
+
         if(imageView.getImage().equals(imageTeamLeader1)){
+            currentRole = 1;
             imageView.setImage(imageTeamLeader0);
         }else if(imageView.getImage().equals(imageTeamLeader0)){
             imageView.setImage(imageTeamLeader1);
+        }
+
+        for(TeamDTO teamDTO: teamDTOS_ALL){
+            int team = teamDTO.getTeam();
+            int role = teamDTO.getRole();
+            String ctxId = teamDTO.getCtxId();
+            String name = teamDTO.getName();
+
+            if(team == Integer.parseInt(selectMissionTeamIndex)){
+                if(ctxId.equals(selectMissionMemberIndex)){
+                    teamDTO.setRole(currentRole);
+                }
+            }
         }
     }
 
     @FXML
     private void onTeamSelectedSentNextAction(MouseEvent event) throws IOException{
+        EventType eventType = event.getEventType();
+        ImageView imageView = (ImageView)event.getSource();
+
+        if(eventType == MouseEvent.MOUSE_ENTERED){
+            imageView.setImage(imageMission1);
+        }else if(eventType == MouseEvent.MOUSE_CLICKED){
+            imageView.setImage(imageMission3);
+
+
+            sentPane.setVisible(true);
+            Task<Void> countdownTask = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    // 延遲兩秒
+                    Thread.sleep(2000);
+                    return null;
+                }
+            };
+
+            countdownTask.setOnSucceeded(workerStateEvent -> {
+
+                sentPane.setVisible(false);
+
+            });
+
+            // 啟動任務
+            new Thread(countdownTask).start();
+
+        }else if(eventType == MouseEvent.MOUSE_EXITED){
+            imageView.setImage(imageMission2);
+        }
 
     }
 
