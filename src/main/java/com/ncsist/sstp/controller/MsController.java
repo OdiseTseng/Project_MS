@@ -1,9 +1,8 @@
 package com.ncsist.sstp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ncsist.sstp.cell.course.ClassPane;
-import com.ncsist.sstp.cell.course.CoursePane;
-import com.ncsist.sstp.cell.course.TeamUserPane;
+import com.ncsist.sstp.Main;
+import com.ncsist.sstp.cell.course.*;
 import com.ncsist.sstp.http.HttpClientGetData;
 import com.ncsist.sstp.model.TeamDTO;
 import com.ncsist.sstp.server.controller.NettyClientMsgController;
@@ -11,10 +10,12 @@ import com.ncsist.sstp.server.service.NettyClientTeamService;
 import com.ncsist.sstp.utils.text.NettyCode;
 import com.ncsist.sstp.vo.Course;
 import com.ncsist.sstp.vo.User;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
@@ -88,6 +89,19 @@ public class MsController {
     @FXML
     private ImageView teamSelectBack2;
 
+    @FXML
+    private ImageView missionBack;
+    @FXML
+    private Label missionLabelTeam;
+    @FXML
+    private Label missionLabelMember;
+    @FXML
+    private Label missionLabelLeader;
+
+    @FXML
+    private ImageView missionIsLeader;
+
+
 
 
     @FXML
@@ -108,6 +122,14 @@ public class MsController {
     private GridPane teamSelectedPane2;
 
     @FXML
+    private Pane missionPane;
+
+    @FXML
+    private GridPane missionTeamGridPane;
+    @FXML
+    private GridPane missionMemberGridPane;
+
+    @FXML
     private Pane updatePane;
 
     private Image imageBlank = new Image("./images/ms_blank.png");
@@ -122,8 +144,8 @@ public class MsController {
     private Image image1 = new Image("./images/ms/team_course/課程設定1觸碰.png");
     private Image image2 = new Image("./images/ms/team_course/課程設定1點選.png");
 
-    private Image imageTeam0 = new Image("./images/ms/team_course/課程設定2學員.png");
-    private Image imageTeam1 = new Image("./images/ms/team_course/課程設定2學員_已選取-removebg-preview.png");
+    private Image imageTeamLeader0 = new Image("./images/ms/team_course/button/隊長.png");
+    private Image imageTeamLeader1 = new Image("./images/ms/team_course/button/隊員.png");
 
     private Image tmpImage;
     private int tmpPos = -1;
@@ -135,7 +157,12 @@ public class MsController {
     private static String selectCourseIndex = "";
     private static ImageView lastCourseView;
 
-    List<TeamDTO> teamDTOS = null;
+    private static String selectMissionTeamIndex = "1";
+    private static ImageView lastMissionTeamView;
+    private static String selectMissionMemberIndex = "";
+    private static ImageView lastMissionMemberView;
+
+    List<TeamDTO> teamDTOS_ALL = null;
 
     List<TeamDTO> teamDTOS1 = null;
     List<TeamDTO> teamDTOS2 = null;
@@ -158,9 +185,20 @@ public class MsController {
         teamSelectBack1.setVisible(false);
         teamSelectBack2.setVisible(false);
 
+        courseSelect.setVisible(false);
+        teamSelect.setVisible(false);
+        missionSelect.setVisible(false);
+
         classGridPane.setVisible(false);
         courseGridPane.setVisible(false);
         updatePane.setVisible(false);
+
+        missionIsLeader.setImage(imageTeamLeader1);
+        missionLabelTeam.setFont(Main.customFont);
+        missionLabelMember.setFont(Main.customFont);
+        missionLabelLeader.setFont(Main.customFont);
+        missionBack.setVisible(false);
+        missionPane.setVisible(false);
         // 初始化程式碼，如果需要的話
     }
 
@@ -172,6 +210,7 @@ public class MsController {
 
         boolean showCoursePane = false;
         boolean showTeamPane = false;
+        boolean showMissonPane = false;
 
         System.out.println("clickedId : " + clickedId);
         switch (clickedId){
@@ -190,6 +229,7 @@ public class MsController {
             case "missionSelect":
                 backImg.setImage(imageCourse3);
                 tab.setImage(imageTab3);
+                showMissonPane = true;
                 System.out.println("missionSelect");
                 break;
         }
@@ -207,13 +247,18 @@ public class MsController {
         teamSelectedPane1.setVisible(showTeamPane);
         teamSelectedPane2.setVisible(showTeamPane);
 
+        missionPane.setVisible(showMissonPane);
+        missionTeamGridPane.setVisible(showMissonPane);
+        missionMemberGridPane.setVisible(showMissonPane);
+
         if(showTeamPane){
-            teamDTOS = NettyClientTeamService.getTeamDTOList();
-            System.out.println("teamDTOS: " + teamDTOS);
+            System.out.println("showTeamPane");
+            teamDTOS_ALL = NettyClientTeamService.getTeamDTOList();
+            System.out.println("teamDTOS: " + teamDTOS_ALL);
 
             teamDTOS1 = new ArrayList<>();
             teamDTOS2 = new ArrayList<>();
-            for(TeamDTO teamDTO : teamDTOS){
+            for(TeamDTO teamDTO : teamDTOS_ALL){
                 if(teamDTO.getTeam() == 1){
                     teamDTOS1.add(teamDTO);
                 }
@@ -253,6 +298,121 @@ public class MsController {
             teamSelectedPane1.getChildren().clear();
             teamSelectedPane2.getChildren().clear();
         }
+
+        if(showMissonPane){
+            System.out.println("showMissonPane");
+
+            EventHandler missionTeamEventHandler = event1 -> {
+                EventType eventType = event1.getEventType();
+                Pane sourceMissionPane = (Pane) event1.getSource();
+                String currentMissionId = sourceMissionPane.getId();
+                ImageView sourceMissionView = (ImageView) sourceMissionPane.getChildren().get(0);
+//            Label sourceLabel = (Label) sourcePane.getChildren().get(1);
+                if(eventType == MouseEvent.MOUSE_CLICKED){
+                    System.out.println("mouse clicked");
+
+                    if(!currentMissionId.equals(selectMissionTeamIndex)){
+                        selectMissionTeamIndex = currentMissionId;
+                        sourceMissionView.setImage(image2);
+                        if(lastMissionTeamView != null){
+                            lastMissionTeamView.setImage(image0);
+                        }
+                        lastMissionTeamView = sourceMissionView;
+                    }else{
+                        selectMissionTeamIndex = "";
+                        sourceMissionView.setImage(image1);
+                        lastMissionTeamView = null;
+                    }
+
+
+                }else if(eventType == MouseEvent.MOUSE_ENTERED){
+                    if(!currentMissionId.equals(selectMissionTeamIndex)){
+                        sourceMissionView.setImage(image1);
+                    }
+
+                }else if(eventType == MouseEvent.MOUSE_EXITED){
+                    if(!currentMissionId.equals(selectMissionTeamIndex)) {
+                        sourceMissionView.setImage(image0);
+                    }
+
+                }
+            };
+
+            EventHandler missionMemberEventHandler = event1 -> {
+                EventType eventType = event1.getEventType();
+                Pane sourceMissionPane = (Pane) event1.getSource();
+                String currentMissionId = sourceMissionPane.getId();
+                ImageView sourceMissionView = (ImageView) sourceMissionPane.getChildren().get(0);
+//            Label sourceLabel = (Label) sourcePane.getChildren().get(1);
+                if(eventType == MouseEvent.MOUSE_CLICKED){
+                    System.out.println("mouse clicked");
+
+                    if(!currentMissionId.equals(selectMissionTeamIndex)){
+                        selectMissionTeamIndex = currentMissionId;
+                        sourceMissionView.setImage(image2);
+                        if(lastMissionTeamView != null){
+                            lastMissionTeamView.setImage(image0);
+                        }
+                        lastMissionTeamView = sourceMissionView;
+                    }else{
+                        selectMissionTeamIndex = "";
+                        sourceMissionView.setImage(image1);
+                        lastMissionTeamView = null;
+                    }
+
+
+                }else if(eventType == MouseEvent.MOUSE_ENTERED){
+                    if(!currentMissionId.equals(selectMissionTeamIndex)){
+                        sourceMissionView.setImage(image1);
+                    }
+
+                }else if(eventType == MouseEvent.MOUSE_EXITED){
+                    if(!currentMissionId.equals(selectMissionTeamIndex)) {
+                        sourceMissionView.setImage(image0);
+                    }
+
+                }
+            };
+
+            teamDTOS1 = new ArrayList<>();
+            teamDTOS2 = new ArrayList<>();
+            System.out.println("teamDTOS_ALL : ");
+            for(TeamDTO teamDTO : teamDTOS_ALL){
+                System.out.println("teamDTO " + teamDTO);
+                if(teamDTO.getTeam() == 1){
+                    teamDTOS1.add(teamDTO);
+                }
+                if(teamDTO.getTeam() == 2){
+                    teamDTOS2.add(teamDTO);
+                }
+            }
+            System.out.println("teamDTOS1 size : " + teamDTOS1.size());
+
+//            missionPane
+            int teams = teamDTOS1.isEmpty() ? 0: 1;
+                teams += teamDTOS2.isEmpty() ? 0: 1;
+                int currentTeam = 1;
+
+            for(int x = 1; x <= teams; x++){
+                Pane missionTeamPane = new MissionTeamPane(x, currentTeam).getPane();
+                missionTeamPane.setOnMouseEntered(missionTeamEventHandler);
+                missionTeamPane.setOnMouseClicked(missionTeamEventHandler);
+                missionTeamPane.setOnMouseExited(missionTeamEventHandler);
+
+                missionTeamGridPane.add(missionTeamPane, x-1, 0);
+            }
+
+            for(int x = 0; x < teamDTOS1.size(); x++){
+                TeamDTO teamDTO = teamDTOS1.get(x);
+                Pane missionMemberPane = new MissionMemberPane(teamDTO.getName(), teamDTO.getCtxId(), selectMissionMemberIndex).getPane();
+                missionMemberPane.setOnMouseEntered(missionMemberEventHandler);
+                missionMemberPane.setOnMouseClicked(missionMemberEventHandler);
+                missionMemberPane.setOnMouseExited(missionMemberEventHandler);
+
+                missionMemberGridPane.add(missionMemberPane, x , 0);
+            }
+
+        }
     }
 
     @FXML
@@ -285,11 +445,12 @@ public class MsController {
             System.out.println("teamEventHandler : ");
             EventType eventType = event1.getEventType();
             Pane sourceTeamPane = (Pane) event1.getSource();
-            String currentId = sourceTeamPane.getId().trim();
-            ImageView sourceTeamView = (ImageView) sourceTeamPane.getChildren().get(0);
-            Label sourceTeamLabel = (Label) sourceTeamPane.getChildren().get(1);
+            String currentCtxId = sourceTeamPane.getId().trim();
+            Label sourceTeamSelectedLabel = (Label) sourceTeamPane.getChildren().get(0);
+            ImageView sourceTeamView = (ImageView) sourceTeamPane.getChildren().get(1);
+            Label sourceTeamLabel = (Label) sourceTeamPane.getChildren().get(2);
             if(eventType == MouseEvent.MOUSE_CLICKED){
-                teamDTOS = NettyClientTeamService.getTeamDTOList();
+                teamDTOS_ALL = NettyClientTeamService.getTeamDTOList();
 //                List<TeamDTO> teamDTOS = NettyClientTeamService.getTeamDTOList();
                 System.out.println("mouse clicked");
                 
@@ -310,28 +471,49 @@ public class MsController {
 //                        }
 
                         int y = 0;
-                        for(int x= 0; x+y < teamDTOS1.size(); x++){
-                            TeamDTO teamDTO = teamDTOS.get(x+y);
-                            String ctxId = teamDTO.getCtxId();
-                            String name = teamDTO.getName();
-//                            int team = teamDTO.getTeam();
+                        for(int x= 0; x+y < 3; x++){
+                            for(TeamDTO teamDTO: teamDTOS_ALL){
+//                                TeamDTO teamDTO = teamDTOS.get(x+y);
+                                String ctxId = teamDTO.getCtxId();
+                                String name = teamDTO.getName();
+                            int team = teamDTO.getTeam();
 
-                            Pane pane = new TeamUserPane(ctxId, name, 1, true).getPane();
-                            teamSelectedPane1.add(pane, x, y);
+//                                if(ctxId.equals(currentCtxId)) {
+//                                    Pane pane = new TeamUserPane(ctxId, name, 1, true).getPane();
+//                                    teamSelectedPane1.add(pane, x, y);
+//                                }
+                                if(team != currentTeam){
+                                    teamDTO.setTeam(currentTeam);
+                                    Pane pane = new TeamUserPane(ctxId, name, currentTeam, true).getPane();
+                                    teamSelectedPane1.add(pane, x, y);
+                                }else{
+                                    ObservableList<Node> nodes = teamSelectedPane1.getChildren();
+                                    for(int z = 0 ; z < nodes.size(); z++){
+                                        Pane selectedPane = (Pane)nodes.get(z);
+                                        String selectedCtxId = selectedPane.getId();
+                                        if(ctxId.equals(selectedCtxId)){
+                                            nodes.remove(z);
+//                                            teamDTO.setTeam(0);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                             if(x == 1){
                                 x = 0;
-                                y = 1;
+                                y++;
                             }
                         }
 
                     }else{
-                        for(TeamDTO teamDTO : teamDTOS){
+                        for(TeamDTO teamDTO : teamDTOS_ALL){
                             String ctxId = teamDTO.getCtxId();
                             String name = teamDTO.getName();
 //                            int team = teamDTO.getTeam();
 
-                            if(currentId.equals(ctxId)){
-                                Pane pane = new TeamUserPane(ctxId, name, 1, true).getPane();
+                            if(currentCtxId.equals(ctxId)){
+//                                teamDTO.setTeam(currentTeam);
+                                Pane pane = new TeamUserPane(ctxId, name, currentTeam, true).getPane();
                                 teamSelectedPane1.add(pane, 0, 0);
                                 break;
                             }
@@ -352,19 +534,53 @@ public class MsController {
 //                            }
 //                        }
 
+//                        int y = 0;
+//                        for(int x= 0; x+y < teamDTOS.size(); x++){
+//                            TeamDTO teamDTO = teamDTOS.get(x+y);
+//                            String ctxId = teamDTO.getCtxId();
+//                            String name = teamDTO.getName();
+////                            int team = teamDTO.getTeam();
+//
+//                            Pane pane = new TeamUserPane(ctxId, name, 2, true).getPane();
+//                            teamSelectedPane2.add(pane, x, y);
+//
+//                            if(x == 1){
+//                                x = 0;
+//                                y = 1;
+//                            }
+//                        }
                         int y = 0;
-                        for(int x= 0; x+y < teamDTOS.size(); x++){
-                            TeamDTO teamDTO = teamDTOS.get(x+y);
-                            String ctxId = teamDTO.getCtxId();
-                            String name = teamDTO.getName();
-//                            int team = teamDTO.getTeam();
+                        for(int x= 0; x+y < 3; x++){
+                            for(TeamDTO teamDTO: teamDTOS_ALL){
+//                                TeamDTO teamDTO = teamDTOS.get(x+y);
+                                String ctxId = teamDTO.getCtxId();
+                                String name = teamDTO.getName();
+                                int team = teamDTO.getTeam();
 
-                            Pane pane = new TeamUserPane(ctxId, name, 2, true).getPane();
-                            teamSelectedPane2.add(pane, x, y);
 
+                                if(ctxId.equals(currentCtxId)) {
+
+                                    if(team != currentTeam){
+//                                        teamDTO.setTeam(currentTeam);
+                                        Pane pane = new TeamUserPane(ctxId, name, currentTeam, true).getPane();
+                                        teamSelectedPane2.add(pane, x, y);
+                                    }else{
+                                        ObservableList<Node> nodes = teamSelectedPane2.getChildren();
+                                        for(int z = 0 ; z < nodes.size(); z++){
+                                            Pane selectedPane = (Pane)nodes.get(z);
+                                            String selectedCtxId = selectedPane.getId();
+                                            if(ctxId.equals(selectedCtxId)){
+//                                                teamDTO.setTeam(0);
+                                                nodes.remove(z);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                             if(x == 1){
                                 x = 0;
-                                y = 1;
+                                y++;
                             }
                         }
 
@@ -381,13 +597,14 @@ public class MsController {
                     }else{
 //                        teamSelectedPane1.add(sourceTeamPane, 0 ,0);
 
-                        for(TeamDTO teamDTO : teamDTOS) {
+                        for(TeamDTO teamDTO : teamDTOS_ALL) {
                             String ctxId = teamDTO.getCtxId();
                             String name = teamDTO.getName();
-//                            int team = teamDTO.getTeam();
+                            int team = teamDTO.getTeam();
 
-                            if (currentId.equals(ctxId)) {
-                                Pane pane = new TeamUserPane(ctxId, name, 2, true).getPane();
+                            if (currentCtxId.equals(ctxId)) {
+//                                teamDTO.setTeam(currentTeam);
+                                Pane pane = new TeamUserPane(ctxId, name, currentTeam, true).getPane();
                                 teamSelectedPane2.add(pane, 0, 0);
                                 break;
                             }
@@ -400,14 +617,14 @@ public class MsController {
 //
 //                }
                 System.out.println("currentTeam : " + currentTeam);
-                System.out.println("currentId : " + currentId);
+                System.out.println("currentId : " + currentCtxId);
 
-                for (TeamDTO teamDTO : teamDTOS){
+                for (TeamDTO teamDTO : teamDTOS_ALL){
                     String ctxId = teamDTO.getCtxId().trim();
                     String name = teamDTO.getName();
                     int team = teamDTO.getTeam();
                     System.out.println("ctxId : " + ctxId);
-                    if(currentId.equals(ctxId)){
+                    if(currentCtxId.equals(ctxId)){
                         System.out.println("equals : ");
                         if(team != currentTeam){
                             teamDTO.setTeam(currentTeam);
@@ -415,12 +632,14 @@ public class MsController {
 //                            sourceTeamView.setOpacity(0.2);
 //                            sourceTeamLabel.setOpacity(0.2);
                             sourceTeamPane.setOpacity(0.5);
+                            sourceTeamSelectedLabel.setVisible(true);
                         }else{
                             teamDTO.setTeam(0);
 //                            sourceTeamView.setImage(imageTeam0);
 //                            sourceTeamView.setOpacity(1.0);
 //                            sourceTeamLabel.setOpacity(1.0);
                             sourceTeamPane.setOpacity(1.0);
+                            sourceTeamSelectedLabel.setVisible(false);
                         }
 
                     }
@@ -435,11 +654,11 @@ public class MsController {
 //        for (TeamDTO teamDTO : teamDTOS){
 //            teamSelectPane.add();
 //        }
-        System.out.println("teamDTOS: " + teamDTOS);
+        System.out.println("teamDTOS: " + teamDTOS_ALL);
 
         int index = 0;
-        for (int x = 0 ; x < teamDTOS.size(); x++){
-                TeamDTO teamDTO = teamDTOS.get(index);
+        for (int x = 0; x < teamDTOS_ALL.size(); x++){
+                TeamDTO teamDTO = teamDTOS_ALL.get(index);
                 String ctxId = teamDTO.getCtxId();
                 String name = teamDTO.getName();
                 int team = teamDTO.getTeam();
@@ -504,6 +723,8 @@ public class MsController {
 
         EventType eventType = event.getEventType();
 
+        System.out.println("eventType : " + eventType);
+
         if(eventType == MouseEvent.MOUSE_ENTERED){
             if(teamSelectGridPane.isVisible()){
                 teamSelectBack1.setVisible(false);
@@ -526,12 +747,12 @@ public class MsController {
                 countdownTask.setOnSucceeded(workerStateEvent -> {
                     teamSelectedPane1.getChildren().clear();
                     teamSelectedPane2.getChildren().clear();
-                    teamDTOS = NettyClientTeamService.getTeamDTOList();
-                    System.out.println("teamDTOS: " + teamDTOS);
+                    teamDTOS_ALL = NettyClientTeamService.getTeamDTOList();
+                    System.out.println("teamDTOS: " + teamDTOS_ALL);
 
                     teamDTOS1 = new ArrayList<>();
                     teamDTOS2 = new ArrayList<>();
-                    for(TeamDTO teamDTO : teamDTOS){
+                    for(TeamDTO teamDTO : teamDTOS_ALL){
                         if(teamDTO.getTeam() == 1){
                             teamDTOS1.add(teamDTO);
                         }
@@ -551,7 +772,13 @@ public class MsController {
 
                         Pane pane = new TeamUserPane(ctxId, name, team, true).getPane();
 //                pane.setOnMouseClicked(teamEventHandler);
+
                         teamSelectedPane1.add(pane, x, y);
+
+                        if(x == 1){
+                            x = 0;
+                            y++;
+                        }
                     }
 
                     y = 0;
@@ -566,6 +793,11 @@ public class MsController {
                         Pane pane = new TeamUserPane(ctxId, name, team, true).getPane();
 //                pane.setOnMouseClicked(teamEventHandler);
                         teamSelectedPane2.add(pane, x, y);
+
+                        if(x == 1){
+                            x = 0;
+                            y++;
+                        }
                     }
 
                     updatePane.setVisible(false);
@@ -580,6 +812,26 @@ public class MsController {
         }
     }
 
+    @FXML
+    private void onTeamSelectedMemberAction(MouseEvent event) throws IOException{
+
+    }
+
+    @FXML
+    private void onTeamLeaderAction(MouseEvent event) throws IOException{
+        System.out.println("onTeamLeaderAction");
+        ImageView imageView = (ImageView)event.getSource();
+        if(imageView.getImage().equals(imageTeamLeader1)){
+            imageView.setImage(imageTeamLeader0);
+        }else if(imageView.getImage().equals(imageTeamLeader0)){
+            imageView.setImage(imageTeamLeader1);
+        }
+    }
+
+    @FXML
+    private void onTeamSelectedSentNextAction(MouseEvent event) throws IOException{
+
+    }
 
     @FXML
     private void onSystemDescAction(MouseEvent event) throws IOException {
@@ -604,6 +856,10 @@ public class MsController {
     @FXML
     private void startTeamCourseAction(MouseEvent event) throws IOException {
         System.out.println("startTeamCourseAction");
+
+        courseSelect.setVisible(true);
+        teamSelect.setVisible(true);
+        missionSelect.setVisible(true);
 
         classGridPane.getChildren().clear();
         courseGridPane.getChildren().clear();

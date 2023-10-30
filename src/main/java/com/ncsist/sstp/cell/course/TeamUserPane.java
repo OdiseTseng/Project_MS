@@ -9,13 +9,12 @@ import lombok.Getter;
 
 public class TeamUserPane extends Pane{
 
-//    @FXML
-    private Label buttonLabel;
+    private Label labelSelected;
 
-//    @FXML
-    private ImageView buttonView;
+    private Label label;
 
-//    @FXML
+    private ImageView imageView;
+
     @Getter
     private Pane pane;
 
@@ -24,30 +23,38 @@ public class TeamUserPane extends Pane{
 
     public TeamUserPane(String ctxId, String username, int team, boolean isSmall) {
         super();
-        System.out.println("UserListPane :  username => " + username);
+        System.out.println("TeamUserPane :  username => " + username);
 
-        buttonLabel = new Label();
+        labelSelected = new Label();
+        label = new Label();
         if(isSmall){
-            buttonLabel.setPrefWidth(82.5);
-            buttonLabel.setPrefHeight(15.0);
-            buttonLabel.setLayoutX(22.5);
-            buttonLabel.setLayoutY(60.0);
+            label.setPrefWidth(82.5);
+            label.setPrefHeight(15.0);
+            label.setLayoutX(22.5);
+            label.setLayoutY(60.0);
         }else{
-            buttonLabel.setPrefWidth(110.0);
-            buttonLabel.setPrefHeight(20.0);
-            buttonLabel.setLayoutX(30.0);
-            buttonLabel.setLayoutY(80.0);
+            labelSelected.setPrefWidth(110.0);
+            labelSelected.setPrefHeight(20.0);
+            labelSelected.setLayoutX(40.0);
+            labelSelected.setFont(Main.customFont);
+            labelSelected.setText("已選");
+
+            label.setPrefWidth(110.0);
+            label.setPrefHeight(20.0);
+            label.setLayoutX(30.0);
+            label.setLayoutY(90.0);
         }
-        buttonLabel.setFont(Main.customFont);
-        buttonLabel.setText(username);
+        label.setFont(Main.customFont);
+        label.setText(username);
 
-        buttonView = new ImageView();
+        imageView = new ImageView();
         if(isSmall){
-            buttonView.setFitWidth(82.5);
-            buttonView.setFitHeight(97.5);
+            imageView.setFitWidth(82.5);
+            imageView.setFitHeight(97.5);
         }else{
-            buttonView.setFitWidth(110.0);
-            buttonView.setFitHeight(130.0);
+            imageView.setFitWidth(110.0);
+            imageView.setFitHeight(120.0);
+            imageView.setLayoutY(10.0);
         }
 
         pane = new Pane();
@@ -55,11 +62,12 @@ public class TeamUserPane extends Pane{
 //            buttonView.setImage(image1);
             pane.setOpacity(0.5);
         }
-//        else{
+        else{
 //            buttonView.setImage(image0);
-//        }
+            labelSelected.setVisible(false);
+        }
 
-        buttonView.setImage(image0);
+        imageView.setImage(image0);
         if(isSmall){
             pane.setPrefWidth(82.5);
             pane.setPrefHeight(97.5);
@@ -70,8 +78,9 @@ public class TeamUserPane extends Pane{
 
         pane.setId(ctxId);
 
-        pane.getChildren().add(buttonView);
-        pane.getChildren().add(buttonLabel);
+        pane.getChildren().add(labelSelected);
+        pane.getChildren().add(imageView);
+        pane.getChildren().add(label);
         pane.setVisible(true);
     }
 

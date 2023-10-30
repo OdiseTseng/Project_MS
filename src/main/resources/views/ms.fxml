@@ -65,26 +65,6 @@
             <Image url="@../images/O選單底圖.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="tab" fitHeight="235.0" fitWidth="264.0" layoutX="328.0" layoutY="45.0" onMouseClicked="#onTabSelectAction" pickOnBounds="true" preserveRatio="true" visible="false">
-         <image>
-            <Image url="@../images/ms/team_course/課程設定選擇課程.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="courseSelect" fitHeight="50.0" fitWidth="90.0" layoutX="325.0" layoutY="54.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/O選單底圖.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="teamSelect" fitHeight="70.0" fitWidth="90.0" layoutX="415.0" layoutY="54.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/O選單底圖.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="missionSelect" fitHeight="60.0" fitWidth="90.0" layoutX="505.0" layoutY="54.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/O選單底圖.png" />
-         </image>
-      </ImageView>
       <ListView fx:id="courseList" layoutX="315.0" layoutY="188.0" prefHeight="528.0" prefWidth="162.0" visible="false" />
        <GridPane fx:id="classGridPane" hgap="1.0" layoutX="350.0" layoutY="195.0" prefHeight="528.0" prefWidth="303.0" vgap="1.0">
        <columnConstraints>
@@ -186,20 +166,97 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-
-      <Pane fx:id="updatePane" prefHeight="720.0" prefWidth="1280.0">
+      <Pane fx:id="missionPane" prefHeight="720.0" prefWidth="1280.0">
          <children>
-            <ImageView fitHeight="720.0" fitWidth="1280.0" opacity="0.3" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="missionBack" fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/ms/team_course/back_black.png" />
+                  <Image url="@../images/ms/team_course/ms_mission-複製.png" />
                </image>
             </ImageView>
-            <Label layoutX="640.0" layoutY="360.0" text="更新隊伍資料中..." textFill="WHITE">
+            <Label fx:id="missionLabelTeam" layoutX="350.0" layoutY="150.0" text="分組">
                <font>
-                  <Font size="40.0" />
+                  <Font size="14.0" />
                </font>
             </Label>
+            <GridPane fx:id="missionTeamGridPane" layoutX="410.0" layoutY="135.0" visible="false">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+            <Label fx:id="missionLabelMember" layoutX="350.0" layoutY="210.0" text="學員">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <GridPane fx:id="missionMemberGridPane" layoutX="410.0" layoutY="195.0" visible="false">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+            <Label fx:id="missionLabelLeader" layoutX="350.0" layoutY="270.0" text="本次任務職稱">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="missionIsLeader" fitHeight="50.0" fitWidth="75.0" layoutX="470.0" layoutY="266.0" onMouseClicked="#onTeamLeaderAction" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/ms/team_course/button/隊員.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="teamSentNext" fitHeight="60.0" fitWidth="120.0" layoutX="927.0" layoutY="665.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/ms/team_course/button/課程設定4送出預設.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
+
+       <ImageView fx:id="tab" fitHeight="235.0" fitWidth="264.0" layoutX="328.0" layoutY="45.0" onMouseClicked="#onTabSelectAction" pickOnBounds="true" preserveRatio="true" visible="false">
+           <image>
+               <Image url="@../images/ms/team_course/課程設定選擇課程.png" />
+           </image>
+       </ImageView>
+       <ImageView fx:id="courseSelect" fitHeight="50.0" fitWidth="90.0" layoutX="325.0" layoutY="54.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+           <image>
+               <Image url="@../images/O選單底圖.png" />
+           </image>
+       </ImageView>
+       <ImageView fx:id="teamSelect" fitHeight="70.0" fitWidth="90.0" layoutX="415.0" layoutY="54.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+           <image>
+               <Image url="@../images/O選單底圖.png" />
+           </image>
+       </ImageView>
+       <ImageView fx:id="missionSelect" fitHeight="60.0" fitWidth="90.0" layoutX="505.0" layoutY="54.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+           <image>
+               <Image url="@../images/O選單底圖.png" />
+           </image>
+       </ImageView>
+
+       <Pane fx:id="updatePane" prefHeight="720.0" prefWidth="1280.0">
+           <children>
+               <ImageView fitHeight="720.0" fitWidth="1280.0" opacity="0.3" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@../images/ms/team_course/back_black.png" />
+                   </image>
+               </ImageView>
+               <Label layoutX="640.0" layoutY="360.0" text="更新隊伍資料中..." textFill="WHITE">
+                   <font>
+                       <Font size="40.0" />
+                   </font>
+               </Label>
+           </children>
+       </Pane>
    </children>
 </Pane>
