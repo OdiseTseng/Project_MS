@@ -1,4 +1,4 @@
-package com.ncsist.sstp.cell.course;
+package com.ncsist.sstp.pane.course;
 
 import com.ncsist.sstp.Main;
 import javafx.scene.control.Label;
@@ -24,6 +24,9 @@ public class MissionTeamPane extends Pane{
 
     private Image image0 = new Image("./images/ms/team_course/課程設定1預設.png");
     private Image image1 = new Image("./images/ms/team_course/課程設定1點選.png");
+
+//    private Image image0 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定1預設.png"));
+//    private Image image1 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定1點選.png"));
 
     public MissionTeamPane(int team, int currentTeam) {
         super();

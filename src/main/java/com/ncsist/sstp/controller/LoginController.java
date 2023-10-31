@@ -84,10 +84,12 @@ public class LoginController {
                 } else if (level == 1002) {
                     System.out.println("2你是教官");
                     FXMLLoader msLoader = new FXMLLoader(getClass().getResource(CommonString.PATH_XML + CommonString.XML_MS));
+//                    System.out.println("msLoader : " + msLoader);
                     Parent msRoot = msLoader.load();
                     Scene msScene = new Scene(msRoot);
 
                     MsController msController = msLoader.getController();
+//                    msController.setPrimaryStage(primaryStage);
                     primaryStage.setScene(msScene);
                     primaryStage.setTitle("MS");
 //                    msController.initializeUserData(jsonNode);

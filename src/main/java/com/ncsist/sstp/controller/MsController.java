@@ -2,11 +2,12 @@ package com.ncsist.sstp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ncsist.sstp.Main;
-import com.ncsist.sstp.cell.course.*;
 import com.ncsist.sstp.http.HttpClientGetData;
 import com.ncsist.sstp.model.TeamDTO;
+import com.ncsist.sstp.pane.course.*;
 import com.ncsist.sstp.server.controller.NettyClientMsgController;
 import com.ncsist.sstp.server.service.NettyClientTeamService;
+import com.ncsist.sstp.utils.func.DTOParser;
 import com.ncsist.sstp.utils.text.NettyCode;
 import com.ncsist.sstp.vo.Course;
 import com.ncsist.sstp.vo.User;
@@ -25,7 +26,11 @@ import javafx.stage.Stage;
 
 import javafx.scene.control.ListView;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
 public class MsController {
@@ -138,40 +143,40 @@ public class MsController {
     @FXML
     private Pane sentPane;
 
-    private Image imageBlank = new Image("./images/ms_blank.png");
-    private Image imageCourse1 = new Image("./images/ms/team_course/ms_course.png");
-    private Image imageCourse2 = new Image("./images/ms/team_course/ms_team.png");
-    private Image imageCourse3 = new Image("./images/ms/team_course/ms_mission.png");
-    private Image imageTab1 = new Image("./images/ms/team_course/課程設定選擇課程.png");
-    private Image imageTab2 = new Image("./images/ms/team_course/課程設定分組.png");
-    private Image imageTab3 = new Image("./images/ms/team_course/課程設定任務設定.png");
+    private Image imageBlank;
+    private Image imageCourse1;
+    private Image imageCourse2;
+    private Image imageCourse3;
+    private Image imageTab1;
+    private Image imageTab2;
+    private Image imageTab3;
 
-    private Image image0 = new Image("./images/ms/team_course/課程設定1預設.png");
-    private Image image1 = new Image("./images/ms/team_course/課程設定1觸碰.png");
-    private Image image2 = new Image("./images/ms/team_course/課程設定1點選.png");
+    private Image image0;
+    private Image image1;
+    private Image image2;
 
-    private Image imageTeamLeader0 = new Image("./images/ms/team_course/button/隊長.png");
-    private Image imageTeamLeader1 = new Image("./images/ms/team_course/button/隊員.png");
+    private Image imageTeamLeader0;
+    private Image imageTeamLeader1;
 
 
-    private Image imageMission1 = new Image("./images/ms/team_course/button/課程設定4送出預設.png");
-    private Image imageMission2 = new Image("./images/ms/team_course/button/課程設定4送出觸碰.png");
-    private Image imageMission3 = new Image("./images/ms/team_course/button/課程設定4送出點選.png");
+    private Image imageMission1;
+    private Image imageMission2;
+    private Image imageMission3;
 
     private Image tmpImage;
     private int tmpPos = -1;
 
 
-    private static String selectClassIndex = "";
-    private static ImageView lastClassView;
+    private String selectClassIndex = "";
+    private ImageView lastClassView;
 
-    private static String selectCourseIndex = "";
-    private static ImageView lastCourseView;
+    private String selectCourseIndex = "";
+    private ImageView lastCourseView;
 
-    private static String selectMissionTeamIndex = "1";
-    private static ImageView lastMissionTeamView;
-    private static String selectMissionMemberIndex = "";
-    private static ImageView lastMissionMemberView;
+    private String selectMissionTeamIndex = "1";
+    private ImageView lastMissionTeamView;
+    private String selectMissionMemberIndex = "";
+    private ImageView lastMissionMemberView;
 
     List<TeamDTO> teamDTOS_ALL = null;
 
@@ -188,6 +193,36 @@ public class MsController {
 
     @FXML
     private void initialize() {
+        System.out.println("initialize");
+        URL url2 = getClass().getResource("/images/ms_blank.png");
+        InputStream url8 = getClass().getResourceAsStream("/images/ms_blank.png");
+
+        System.out.println("url2: " + url2);
+        System.out.println("url8: " + url8);
+
+//        imageBlank = new Image(url8);
+
+
+        imageBlank = new Image("/images/ms_blank.png");
+        imageCourse1 = new Image("/images/ms/team_course/ms_course.png");
+        imageCourse2 = new Image("/images/ms/team_course/ms_team.png");
+        imageCourse3 = new Image("/images/ms/team_course/ms_mission.png");
+        imageTab1 = new Image("/images/ms/team_course/課程設定選擇課程.png");
+        imageTab2 = new Image("/images/ms/team_course/課程設定分組.png");
+        imageTab3 = new Image("/images/ms/team_course/課程設定任務設定.png");
+
+        image0 = new Image("/images/ms/team_course/課程設定1預設.png");
+        image1 = new Image("/images/ms/team_course/課程設定1觸碰.png");
+        image2 = new Image("/images/ms/team_course/課程設定1點選.png");
+
+        imageTeamLeader0 = new Image("/images/ms/team_course/button/隊長.png");
+        imageTeamLeader1 = new Image("/images/ms/team_course/button/隊員.png");
+
+
+        imageMission1 = new Image("/images/ms/team_course/button/課程設定4送出預設.png");
+        imageMission2 = new Image("/images/ms/team_course/button/課程設定4送出觸碰.png");
+        imageMission3 = new Image("/images/ms/team_course/button/課程設定4送出點選.png");
+
         teamSelect1.setVisible(false);
         teamSelect2.setVisible(false);
         teamSelectedPane1.setVisible(false);
@@ -196,13 +231,22 @@ public class MsController {
         teamSelectBack1.setVisible(false);
         teamSelectBack2.setVisible(false);
 
+
+        System.out.println("teamSelect");
+
         courseSelect.setVisible(false);
         teamSelect.setVisible(false);
         missionSelect.setVisible(false);
 
+
+        System.out.println("course tab");
+
         classGridPane.setVisible(false);
         courseGridPane.setVisible(false);
         updatePane.setVisible(false);
+
+
+        System.out.println("3 pane");
 
         missionIsLeader.setImage(imageTeamLeader1);
         missionLabelTeam.setFont(Main.customFont);
@@ -211,6 +255,8 @@ public class MsController {
         missionBack.setVisible(false);
         missionPane.setVisible(false);
         sentPane.setVisible(false);
+
+        System.out.println("final pane");
         // 初始化程式碼，如果需要的話
     }
 
@@ -867,8 +913,12 @@ public class MsController {
         }else if(eventType == MouseEvent.MOUSE_CLICKED){
             imageView.setImage(imageMission3);
 
-
             sentPane.setVisible(true);
+
+            String msgStr = DTOParser.parseDTOsToString(teamDTOS_ALL.toArray());
+
+            nettyClientMsgController.sendCMDMsg(NettyCode.TEAM_WAITING_NEXT, msgStr);
+
             Task<Void> countdownTask = new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {

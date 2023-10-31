@@ -10,9 +10,12 @@ import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.InputStream;
 
+//@SpringBootApplication
 public class Main extends Application {
 
     public static Font customFont = null;
@@ -20,6 +23,7 @@ public class Main extends Application {
     public static void main(String[] args) {
 
         new Thread(NettyClientSocket::startNettyClient).start();
+//        SpringApplication.run(Main.class, args);
         launch(args);
 
     }
@@ -41,6 +45,7 @@ public class Main extends Application {
 
         LoginController loginController = fxmlLoader.getController();
         loginController.setPrimaryStage(primaryStage);
+
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

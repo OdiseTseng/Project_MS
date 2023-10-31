@@ -1,4 +1,4 @@
-package com.ncsist.sstp.cell.course;
+package com.ncsist.sstp.pane.course;
 
 import com.ncsist.sstp.Main;
 import javafx.scene.control.Label;
@@ -20,6 +20,8 @@ public class TeamUserPane extends Pane{
 
     private Image image0 = new Image("./images/ms/team_course/課程設定2學員.png");
     private Image image1 = new Image("./images/ms/team_course/課程設定2學員_已選取-removebg-preview.png");
+//    private Image image0 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定2學員.png"));
+//    private Image image1 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定2學員_已選取-removebg-preview.png"));
 
     public TeamUserPane(String ctxId, String username, int team, boolean isSmall) {
         super();
@@ -30,7 +32,7 @@ public class TeamUserPane extends Pane{
         if(isSmall){
             label.setPrefWidth(82.5);
             label.setPrefHeight(15.0);
-            label.setLayoutX(22.5);
+            label.setLayoutX(13.5);
             label.setLayoutY(60.0);
         }else{
             labelSelected.setPrefWidth(110.0);
@@ -41,7 +43,7 @@ public class TeamUserPane extends Pane{
 
             label.setPrefWidth(110.0);
             label.setPrefHeight(20.0);
-            label.setLayoutX(30.0);
+            label.setLayoutX(25.0);
             label.setLayoutY(90.0);
         }
         label.setFont(Main.customFont);
