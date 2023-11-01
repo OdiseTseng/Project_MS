@@ -10,10 +10,10 @@ import lombok.Getter;
 public class ClassPane extends Pane{
 
 //    @FXML
-    private Label buttonLabel;
+    private Label label;
 
 //    @FXML
-    private ImageView buttonView;
+    private ImageView imageView;
 
 //    @FXML
     @Getter
@@ -22,7 +22,7 @@ public class ClassPane extends Pane{
     private long classYear;
 
 //    private Image image0 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定1預設.png"));
-    private Image image0 = new Image("./images/ms/team_course/課程設定1預設.png");
+    private Image image0 = new Image("/images/ms/team_course/課程設定1預設.png");
 
     public ClassPane(long classYear) {
         super();
@@ -30,24 +30,24 @@ public class ClassPane extends Pane{
 
         this.classYear = classYear;
 
-        buttonLabel = new Label();
-        buttonLabel.setPrefWidth(80.0);
-        buttonLabel.setPrefHeight(33.0);
-        buttonLabel.setFont(Main.customFont);
-        buttonLabel.setLayoutX(6.0);
-        buttonLabel.setLayoutY(2.5);
-        buttonLabel.setText(classYear + "");
+        label = new Label();
+        label.setPrefWidth(80.0);
+        label.setPrefHeight(33.0);
+        label.setFont(Main.customFont);
+        label.setLayoutX(6.0);
+        label.setLayoutY(2.5);
+        label.setText(classYear + "");
 
-        buttonView = new ImageView();
-        buttonView.setFitWidth(100.0);
-        buttonView.setFitHeight(42.5);
-        buttonView.setImage(image0);
+        imageView = new ImageView();
+        imageView.setFitWidth(100.0);
+        imageView.setFitHeight(42.5);
+        imageView.setImage(image0);
         pane = new Pane();
         pane.setPrefWidth(100.0);
         pane.setPrefHeight(42.5);
 
-        pane.getChildren().add(buttonView);
-        pane.getChildren().add(buttonLabel);
+        pane.getChildren().add(imageView);
+        pane.getChildren().add(label);
         pane.setVisible(true);
         pane.setId(classYear + "");
     }

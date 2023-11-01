@@ -1,14 +1,14 @@
 package com.ncsist.sstp.pane.course;
 
 import com.ncsist.sstp.Main;
-import com.ncsist.sstp.vo.Course;
+import com.ncsist.sstp.vo.Unit;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 
-public class CoursePane extends Pane{
+public class MissionUnitPane extends Pane{
 //    private HBox content;
 //    private Text name;
 //    private Text price;
@@ -28,10 +28,11 @@ public class CoursePane extends Pane{
 
 //    private Image image0 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定1預設.png"));
     private Image image0 = new Image("/images/ms/team_course/課程設定1預設.png");
+    private Image image1 = new Image("/images/ms/team_course/課程設定1點選.png");
 
-    public CoursePane(Course course) {
+    public MissionUnitPane(Unit unit, int index, String selectMissionUnitIndex) {
         super();
-        System.out.println("CoursePane :  course => " + course);
+        System.out.println("MissionUnitPane :  unit => " + unit);
 
         label = new Label();
         label.setPrefWidth(80.0);
@@ -39,7 +40,7 @@ public class CoursePane extends Pane{
         label.setFont(Main.customFont);
         label.setLayoutX(6.0);
         label.setLayoutY(2.5);
-        label.setText(course.getCourseName());
+        label.setText(unit.getUnitName());
 
         imageView = new ImageView();
         imageView.setFitWidth(100.0);
@@ -52,8 +53,13 @@ public class CoursePane extends Pane{
 
         pane.getChildren().add(imageView);
         pane.getChildren().add(label);
+//        selectMissionUnitIndex.equals(unit.getUnitId())
+        if(index == 0){
+            imageView.setImage(image1);
+        }
+
         pane.setVisible(true);
-        pane.setId(course.getCourseId() + "");
+        pane.setId(unit.getUnitId() + "");
 
     }
 

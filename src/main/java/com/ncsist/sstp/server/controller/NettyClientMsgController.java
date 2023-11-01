@@ -1,5 +1,6 @@
 package com.ncsist.sstp.server.controller;
 
+import com.ncsist.sstp.model.MissionDTO;
 import com.ncsist.sstp.model.MsgDTO;
 import com.ncsist.sstp.model.NettyDTO;
 import com.ncsist.sstp.model.TeamDTO;
@@ -94,12 +95,30 @@ public class NettyClientMsgController {
 
     public void sendCMDMsg(int cmdCode, String msg){
 //
-//        System.out.println("sendCMD() cmdCode : " + cmdCode);
-//        MsgDTO msgDTO = nettyClientCommonService.createMsgDTO(cmdCode);
-//        String cmdMsg = nettyClientCommonService.parseDTOToString(msgDTO);
-//        System.out.println("sendCMD() cmdMsg : " + cmdMsg);
-//
-//        ctx.writeAndFlush( Unpooled.copiedBuffer( cmdMsg, CharsetUtil.UTF_8));
+        System.out.println("sendCMD() cmdCode : " + cmdCode);
+        MsgDTO msgDTO = nettyClientCommonService.createMsgDTO(cmdCode, msg);
+        String cmdMsg = nettyClientCommonService.parseDTOToString(msgDTO);
+        System.out.println("sendCMD() cmdMsg : " + cmdMsg);
+
+        ctx.writeAndFlush( Unpooled.copiedBuffer( cmdMsg, CharsetUtil.UTF_8));
+    }
+
+    public void sendMissionMsg(String classIndex, String courseIndex, String unitIndex, String msg){
+        System.out.println("sendMissionMsg ;; classIndex: " + classIndex + " ;; courseIndex : " + courseIndex + " ;; msg : " + msg);
+
+        MissionDTO missionDTO = new MissionDTO();
+        missionDTO.setClassIndex(classIndex);
+        missionDTO.setCourseIndex(courseIndex);
+        missionDTO.setUnitIndex(unitIndex);
+        missionDTO.setTeamList(msg);
+
+        String missionStr = DTOParser.parseDTOToString(missionDTO);
+
+        MsgDTO msgDTO = nettyClientCommonService.createMsgDTO(NettyCode.TEAM_WAITING_NEXT, missionStr);
+        String cmdMsg = nettyClientCommonService.parseDTOToString(msgDTO);
+        System.out.println("sendCMD() cmdMsg : " + cmdMsg);
+
+        ctx.writeAndFlush( Unpooled.copiedBuffer( cmdMsg, CharsetUtil.UTF_8));
     }
 
     public void treatMsg(String sourceMsg){

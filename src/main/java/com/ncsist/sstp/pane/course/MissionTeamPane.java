@@ -22,25 +22,25 @@ public class MissionTeamPane extends Pane{
     @Getter
     private Pane pane;
 
-    private Image image0 = new Image("./images/ms/team_course/課程設定1預設.png");
-    private Image image1 = new Image("./images/ms/team_course/課程設定1點選.png");
+    private Image image0 = new Image("/images/ms/team_course/課程設定1預設.png");
+    private Image image1 = new Image("/images/ms/team_course/課程設定1點選.png");
 
 //    private Image image0 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定1預設.png"));
 //    private Image image1 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定1點選.png"));
 
-    public MissionTeamPane(int team, int currentTeam) {
+    public MissionTeamPane(int team, int currentTeam, boolean disablePane) {
         super();
         System.out.println("MissionTeamPane :  team => " + team + " ; currentTeam: " + currentTeam);
 
         String missionStr = "第";
 
         switch (team) {
-            case 1 -> missionStr += "一";
-            case 2 -> missionStr += "二";
-            case 3 -> missionStr += "三";
-            case 4 -> missionStr += "四";
-            case 5 -> missionStr += "五";
-            case 6 -> missionStr += "六";
+            case 0 -> missionStr += "一";
+            case 1 -> missionStr += "二";
+            case 2 -> missionStr += "三";
+            case 3 -> missionStr += "四";
+            case 4 -> missionStr += "五";
+            case 5 -> missionStr += "六";
         }
 
         missionStr += "組";
@@ -72,6 +72,9 @@ public class MissionTeamPane extends Pane{
         pane.setVisible(true);
         pane.setId(team + "");
 
+        if(disablePane){
+            pane.setOpacity(0.5);
+        }
     }
 
 

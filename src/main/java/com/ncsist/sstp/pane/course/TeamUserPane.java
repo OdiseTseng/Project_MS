@@ -18,10 +18,8 @@ public class TeamUserPane extends Pane{
     @Getter
     private Pane pane;
 
-    private Image image0 = new Image("./images/ms/team_course/課程設定2學員.png");
-    private Image image1 = new Image("./images/ms/team_course/課程設定2學員_已選取-removebg-preview.png");
-//    private Image image0 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定2學員.png"));
-//    private Image image1 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定2學員_已選取-removebg-preview.png"));
+    private Image image0 = new Image("/images/ms/team_course/課程設定2學員.png");
+    private Image image1 = new Image("/images/ms/team_course/課程設定2學員_已選取-removebg-preview.png");
 
     public TeamUserPane(String ctxId, String username, int team, boolean isSmall) {
         super();

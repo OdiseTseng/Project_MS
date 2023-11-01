@@ -14,8 +14,8 @@ public class MissionMemberPane extends Pane{
     @Getter
     private Pane pane;
 
-    private Image image0 = new Image("./images/ms/team_course/課程設定1預設.png");
-    private Image image1 = new Image("./images/ms/team_course/課程設定1點選.png");
+    private Image image0 = new Image("/images/ms/team_course/課程設定1預設.png");
+    private Image image1 = new Image("/images/ms/team_course/課程設定1點選.png");
 //    private Image image0 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定1預設.png"));
 //    private Image image1 = new Image(getClass().getResourceAsStream("./images/ms/team_course/課程設定1點選.png"));
 
@@ -38,9 +38,9 @@ public class MissionMemberPane extends Pane{
         imageView.setFitHeight(42.5);
 
         if(currentCtxId.equals(ctxId)){
-            imageView.setImage(image0);
-        }else{
             imageView.setImage(image1);
+        }else{
+            imageView.setImage(image0);
         }
 
         pane = new Pane();

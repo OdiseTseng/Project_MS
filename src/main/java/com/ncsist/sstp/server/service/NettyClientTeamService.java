@@ -14,13 +14,13 @@ import java.util.List;
 
 public class NettyClientTeamService {
 
-
     @Getter
     @Setter
     private static List<TeamDTO> teamDTOList = new ArrayList<>();
 
 
     public MsgDTO treatMsgDTO(int cmd, String from, String msg){
+        System.out.println("team treatMsgDTO;; cmd: " + cmd + " ; from : " + from + " ; msg : " + msg);
         MsgDTO msgDTO = new MsgDTO();
         switch(cmd){
             case NettyCode.TEAM_WAITING_UPDATE:                   //00
@@ -55,18 +55,41 @@ public class NettyClientTeamService {
 
             case NettyCode.TEAM_WAITING_COACH_GET_ALL:         //05
 //                TeamDTO[] teamDTOS = DTOParser.parseStringToDTOs(msg, TeamDTO[].class);
-                TeamDTO[] teamDTOS;
+                TeamDTO[] teamDTOs;
                 try {
-                    teamDTOS = (TeamDTO[])DTOParser.parseStringToDTO(msg, TeamDTO[].class);
+                    teamDTOs = (TeamDTO[])DTOParser.parseStringToDTO(msg, TeamDTO[].class);
 
                 } catch (JsonProcessingException e) {
                     System.out.println("JsonProcessingException : " + e.getMessage());
                     throw new RuntimeException(e);
                 }
 
-                teamDTOList = Arrays.stream(teamDTOS).sorted().toList();
+                System.out.println("teamDTOs : " + teamDTOs.length);
+
+
+
+                boolean findTeam = false;
+                for(TeamDTO teamDTO: teamDTOs){
+                    String ctxId = teamDTO.getCtxId();
+                    findTeam = false;
+                    System.out.println("teamDTO before : " + teamDTO);
+                    for(TeamDTO teamDTO2 : teamDTOList){
+                        String ctxId2 = teamDTO2.getCtxId();
+                        if(ctxId.equals(ctxId2)){
+                            findTeam = true;
+                            break;
+                        }
+                    }
+                    if(!findTeam){
+                        teamDTOList.add(teamDTO);
+                    }
+                }
+
+
+                //此方法不行
+//                teamDTOList = Arrays.stream(teamDTOs).sorted().toList();
                 for(TeamDTO teamDTO : teamDTOList){
-                    System.out.println("teamDTO : " + teamDTO);
+                    System.out.println("teamDTO after : " + teamDTO);
                 }
 
                 msgDTO.setCmd(NettyCode.TEAM_WAITING_COACH_GET_ALL);

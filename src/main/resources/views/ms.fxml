@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -145,6 +146,11 @@
             <Image url="@../images/ms/team_course/課程設定2第四組.png" />
          </image>
       </ImageView>
+      <ImageView fx:id="tips" fitHeight="720.0" fitWidth="200.0" layoutX="1100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/ms/team_course/課程設定1使用輔助說明.png" />
+         </image>
+      </ImageView>
        <ImageView fx:id="teamSelectBack1" fitHeight="360.0" fitWidth="720.0" layoutX="535.0" layoutY="185.0" onMouseClicked="#onTeamSelectBackAction" onMouseExited="#onTeamSelectBackAction" pickOnBounds="true" preserveRatio="true">
            <image>
                <Image url="@../images/ms/team_course/課程設定2組員選擇左上.png" />
@@ -166,19 +172,19 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <Pane fx:id="missionPane" prefHeight="720.0" prefWidth="1280.0">
+      <Pane fx:id="missionPane" prefHeight="720.0" prefWidth="1280.0" visible="false">
          <children>
             <ImageView fx:id="missionBack" fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/ms/team_course/ms_mission-複製.png" />
                </image>
             </ImageView>
-            <Label fx:id="missionLabelTeam" layoutX="350.0" layoutY="150.0" text="分組">
+            <Label fx:id="missionLabelUnit" layoutX="350.0" layoutY="150.0" text="內容">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <GridPane fx:id="missionTeamGridPane" layoutX="410.0" layoutY="135.0" visible="false">
+            <GridPane fx:id="missionUnitGridPane" hgap="10.0" layoutX="410.0" layoutY="135.0" visible="false">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -189,12 +195,12 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
             </GridPane>
-            <Label fx:id="missionLabelMember" layoutX="350.0" layoutY="210.0" text="學員">
+            <Label fx:id="missionLabelTeam" layoutX="350.0" layoutY="210.0" text="分組">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <GridPane fx:id="missionMemberGridPane" layoutX="410.0" layoutY="195.0" visible="false">
+            <GridPane fx:id="missionTeamGridPane" hgap="10.0" layoutX="410.0" layoutY="195.0" visible="false">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -205,16 +211,35 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
             </GridPane>
-            <Label fx:id="missionLabelLeader" layoutX="350.0" layoutY="270.0" text="本次任務職稱">
+            <Label fx:id="missionLabelMember" layoutX="350.0" layoutY="270.0" text="學員">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <ImageView fx:id="missionIsLeader" fitHeight="50.0" fitWidth="75.0" layoutX="470.0" layoutY="266.0" onMouseClicked="#onTeamRoleAction" pickOnBounds="true" preserveRatio="true">
+            <GridPane fx:id="missionMemberGridPane" hgap="10.0" layoutX="410.0" layoutY="255.0" visible="false">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+            <Label fx:id="missionLabelLeader" layoutX="350.0" layoutY="330.0" text="本次任務席位">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="missionIsLeader" disable="true" fitHeight="50.0" fitWidth="75.0" layoutX="470.0" layoutY="326.0" onMouseClicked="#onTeamRoleAction" pickOnBounds="true" preserveRatio="true" visible="false">
                <image>
                   <Image url="@../images/ms/team_course/button/隊員.png" />
                </image>
             </ImageView>
+            <RadioButton fx:id="radio1" layoutX="470.0" layoutY="328.0" mnemonicParsing="false" text="車長" />
+            <RadioButton fx:id="radio2" layoutX="540.0" layoutY="328.0" mnemonicParsing="false" text="一兵" />
+            <RadioButton fx:id="radio3" layoutX="610.0" layoutY="328.0" mnemonicParsing="false" text="二兵" />
             <ImageView fx:id="teamSentNext" fitHeight="60.0" fitWidth="120.0" layoutX="927.0" layoutY="665.0" onMouseClicked="#onTeamSelectedSentNextAction" onMouseEntered="#onTeamSelectedSentNextAction" onMouseExited="#onTeamSelectedSentNextAction" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/ms/team_course/button/課程設定4送出預設.png" />
@@ -223,28 +248,28 @@
          </children>
       </Pane>
 
-       <ImageView fx:id="tab" fitHeight="235.0" fitWidth="264.0" layoutX="328.0" layoutY="45.0" onMouseClicked="#onTabSelectAction" pickOnBounds="true" preserveRatio="true" visible="false">
+       <ImageView fx:id="tabBack" fitHeight="52.0" fitWidth="275.0" layoutX="328.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true" visible="false">
            <image>
                <Image url="@../images/ms/team_course/課程設定選擇課程.png" />
            </image>
        </ImageView>
-       <ImageView fx:id="courseSelect" fitHeight="50.0" fitWidth="90.0" layoutX="325.0" layoutY="54.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+       <ImageView fx:id="courseSelect" fitHeight="50.0" fitWidth="100.0" layoutX="320.0" layoutY="40.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
            <image>
                <Image url="@../images/O選單底圖.png" />
            </image>
        </ImageView>
-       <ImageView fx:id="teamSelect" fitHeight="70.0" fitWidth="90.0" layoutX="415.0" layoutY="54.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+       <ImageView fx:id="teamSelect" fitHeight="70.0" fitWidth="100.0" layoutX="407.0" layoutY="40.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
            <image>
                <Image url="@../images/O選單底圖.png" />
            </image>
        </ImageView>
-       <ImageView fx:id="missionSelect" fitHeight="60.0" fitWidth="90.0" layoutX="505.0" layoutY="54.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+       <ImageView fx:id="missionSelect" fitHeight="60.0" fitWidth="100.0" layoutX="505.0" layoutY="40.0" onMouseClicked="#onTabSelectAction" opacity="0.0" pickOnBounds="true" preserveRatio="true">
            <image>
                <Image url="@../images/O選單底圖.png" />
            </image>
        </ImageView>
 
-       <Pane fx:id="updatePane" prefHeight="720.0" prefWidth="1280.0">
+       <Pane fx:id="updatePane" prefHeight="720.0" prefWidth="1280.0" visible="false">
            <children>
                <ImageView fitHeight="720.0" fitWidth="1280.0" opacity="0.3" pickOnBounds="true" preserveRatio="true">
                    <image>
@@ -258,7 +283,7 @@
                </Label>
            </children>
        </Pane>
-       <Pane fx:id="sentPane" prefHeight="720.0" prefWidth="1280.0">
+       <Pane fx:id="sentPane" prefHeight="720.0" prefWidth="1280.0" visible="false">
            <children>
                <ImageView fitHeight="720.0" fitWidth="1280.0" opacity="0.2" pickOnBounds="true" preserveRatio="true">
                    <image>
