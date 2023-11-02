@@ -13,7 +13,7 @@
    <children>
       <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/T1.1-2.jpg" />
+            <Image url="@../images/ms/背景.png" />
          </image>
       </ImageView>
       <TextField fx:id="usernameField" layoutX="540.0" layoutY="373.0" prefHeight="31.0" prefWidth="200.0" promptText="請輸入帳號" style="-fx-background-color: rgba(53,89,119,0.0);" stylesheets="@login.css" text="1">

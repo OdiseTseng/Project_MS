@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -67,7 +68,7 @@
          </image>
       </ImageView>
       <ListView fx:id="courseList" layoutX="315.0" layoutY="188.0" prefHeight="528.0" prefWidth="162.0" visible="false" />
-       <GridPane fx:id="classGridPane" hgap="1.0" layoutX="350.0" layoutY="195.0" prefHeight="528.0" prefWidth="303.0" vgap="1.0">
+       <GridPane fx:id="classGridPane" hgap="1.0" layoutX="350.0" layoutY="195.0" prefHeight="528.0" prefWidth="220.0" vgap="1.0">
        <columnConstraints>
            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -106,13 +107,13 @@
             <Image url="@../images/ms/team_course/課程設定2第一組.png" />
          </image>
       </ImageView>
-       <GridPane fx:id="teamSelectedPane1" layoutX="360.0" layoutY="200.0" visible="false">
+       <GridPane fx:id="teamSelectedGridPane1" layoutX="360.0" layoutY="200.0" visible="false">
        <columnConstraints>
+           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
        </columnConstraints>
        <rowConstraints>
-           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
        </rowConstraints>
    </GridPane>
@@ -123,13 +124,13 @@
             <Image url="@../images/ms/team_course/課程設定2第二組.png" />
          </image>
       </ImageView>
-      <GridPane fx:id="teamSelectedPane2" layoutX="725.0" layoutY="200.0">
+      <GridPane fx:id="teamSelectedGridPane2" layoutX="725.0" layoutY="200.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
@@ -141,9 +142,9 @@
             <Image url="@../images/ms/team_course/課程設定2第三組.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="teamSelect4" fitHeight="267.0" fitWidth="360.0" layoutX="705.0" layoutY="409.0" onMouseClicked="#onTeamSelectedBackAction" onMouseEntered="#onTeamSelectedBackAction" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="teamSelect4" fitHeight="267.0" fitWidth="360.0" layoutX="705.0" layoutY="409.0" onMouseClicked="#onBlankTeamSelectedBackAction" onMouseEntered="#onBlankTeamSelectedBackAction" onMouseExited="#onBlankTeamSelectedBackAction" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../images/ms/team_course/課程設定2第四組.png" />
+            <Image url="@../images/ms/team_course/課程設定2新增組別.png" />
          </image>
       </ImageView>
       <ImageView fx:id="tips" fitHeight="720.0" fitWidth="200.0" layoutX="1100.0" pickOnBounds="true" preserveRatio="true">
@@ -237,9 +238,15 @@
                   <Image url="@../images/ms/team_course/button/隊員.png" />
                </image>
             </ImageView>
-            <RadioButton fx:id="radio1" layoutX="470.0" layoutY="328.0" mnemonicParsing="false" text="車長" />
-            <RadioButton fx:id="radio2" layoutX="540.0" layoutY="328.0" mnemonicParsing="false" text="一兵" />
-            <RadioButton fx:id="radio3" layoutX="610.0" layoutY="328.0" mnemonicParsing="false" text="二兵" />
+            <RadioButton fx:id="radio1" layoutX="470.0" layoutY="328.0" mnemonicParsing="false" selected="true" text="車長" />
+            <RadioButton fx:id="radio2" layoutX="550.0" layoutY="328.0" mnemonicParsing="false" text="通訊兵" />
+            <RadioButton fx:id="radio3" layoutX="630.0" layoutY="328.0" mnemonicParsing="false" text="操作手" />
+            <Label fx:id="missionLabelContent" layoutX="350.0" layoutY="390.0" text="本次任務內容">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="taMission" layoutX="440.0" layoutY="390.0" prefHeight="200.0" prefWidth="620.0" />
             <ImageView fx:id="teamSentNext" fitHeight="60.0" fitWidth="120.0" layoutX="927.0" layoutY="665.0" onMouseClicked="#onTeamSelectedSentNextAction" onMouseEntered="#onTeamSelectedSentNextAction" onMouseExited="#onTeamSelectedSentNextAction" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/ms/team_course/button/課程設定4送出預設.png" />

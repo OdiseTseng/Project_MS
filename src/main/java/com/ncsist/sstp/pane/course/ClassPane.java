@@ -35,7 +35,7 @@ public class ClassPane extends Pane{
         label.setPrefHeight(33.0);
         label.setFont(Main.customFont);
         label.setLayoutX(6.0);
-        label.setLayoutY(2.5);
+        label.setLayoutY(3.5);
         label.setText(classYear + "");
 
         imageView = new ImageView();
