@@ -204,11 +204,13 @@ public class MsController {
     private String selectMissionUnitIndex = "";
     private ImageView lastMissionUnitView;
 
-    private String selectMissionTeamIndex = "0";
+    private String selectMissionTeamIndex = "1";
     private ImageView lastMissionTeamView;
 
     private String selectMissionMemberIndex = "";
     private ImageView lastMissionMemberView;
+
+    private int selectMissionRoleIndex = 3;
 
     List<ImageView> imageViewClasses = null;
     List<ImageView> imageViewCourses = null;
@@ -301,6 +303,9 @@ public class MsController {
 
         System.out.println("3 pane");
 
+
+        toggleGroup = new ToggleGroup();
+
         radio1.setToggleGroup(toggleGroup);
         radio1.setFont(Main.customFont);
 //        radio1.setSelected(true);
@@ -308,6 +313,7 @@ public class MsController {
         radio2.setFont(Main.customFont);
         radio3.setToggleGroup(toggleGroup);
         radio3.setFont(Main.customFont);
+
         missionLabelContent.setFont(Main.customFont);
         taMission.setFont(Main.customFont);
 
@@ -321,8 +327,6 @@ public class MsController {
         sentPane.setVisible(false);
 
         tips.setVisible(false);
-
-        toggleGroup = new ToggleGroup();
 
         System.out.println("final pane");
         // 初始化程式碼，如果需要的話
@@ -440,8 +444,9 @@ public class MsController {
 
 
             if(units != null && units.length > 0){
-                taMission.setText("");
+                taMission.clear();
                 String unitText = units[0].getUnitSubject();
+                taMission.appendText(unitText + " :\n\n");
                 unitText = units[0].getDescTitle1();
                 taMission.appendText(unitText + " :\n");
                 unitText = units[0].getDescContent1();
@@ -471,37 +476,41 @@ public class MsController {
                             imageView.setImage(image1);
                         }
 
+                        String selectedUnitText = "";
+                        for(int x = 0; x < units.length; x++){
+                            Unit unit = units[x];
+                            Long unitId = unit.getUnitId();
+                            if(unitId == Long.parseLong(currentMissionUnitId)){
+                                taMission.clear();
+                                selectedUnitText = unit.getUnitSubject();
+                                taMission.appendText(selectedUnitText + " :\n\n");
+                                selectedUnitText = unit.getDescTitle1();
+                                taMission.appendText(selectedUnitText + " :\n");
+                                selectedUnitText = unit.getDescContent1();
+                                taMission.appendText(selectedUnitText + "\n\n");
+                                selectedUnitText = unit.getDescTitle2();
+                                taMission.appendText(selectedUnitText + " :\n");
+                                selectedUnitText = unit.getDescContent2();
+                                taMission.appendText(selectedUnitText + "\n\n");
+                                selectedUnitText = unit.getDescTitle3();
+                                taMission.appendText(selectedUnitText + " :\n");
+                                selectedUnitText = unit.getDescContent3();
+                                taMission.appendText(selectedUnitText + "\n");
+                                break;
+                            }
+                        }
+
                         if(!currentMissionUnitId.equals(selectMissionUnitIndex)){
                             selectMissionUnitIndex = currentMissionUnitId;
-                            sourceMissionUnitView.setImage(image2);
-                            if(lastMissionMemberView != null){
-                                lastMissionUnitView.setImage(image0);
-                            }
+//                            if(lastMissionMemberView != null){
+//                            if(lastMissionUnitView != null){
+//                                lastMissionUnitView.setImage(image0);
+//                            }
                             lastMissionUnitView = sourceMissionUnitView;
-
-                            String selectedUnitText = "";
-                            for(int x = 0; x < units.length; x++){
-                                Unit unit = units[0];
-                                Long unitId = unit.getUnitId();
-                                if(unitId == Long.parseLong(selectMissionUnitIndex)){
-                                    taMission.setText("");
-                                    selectedUnitText = units[0].getUnitSubject();
-                                    selectedUnitText = units[0].getDescTitle1();
-                                    taMission.appendText(selectedUnitText + " :\n");
-                                    selectedUnitText = units[0].getDescContent1();
-                                    taMission.appendText(selectedUnitText + "\n\n");
-                                    selectedUnitText = units[0].getDescTitle2();
-                                    taMission.appendText(selectedUnitText + " :\n");
-                                    selectedUnitText = units[0].getDescContent2();
-                                    taMission.appendText(selectedUnitText + "\n\n");
-                                    selectedUnitText = units[0].getDescTitle3();
-                                    taMission.appendText(selectedUnitText + " :\n");
-                                    selectedUnitText = units[0].getDescContent3();
-                                    taMission.appendText(selectedUnitText + "\n");
-                                }
-                            }
-                            taMission.setText(selectedUnitText);
+//                            taMission.setText(selectedUnitText);
                         }
+
+                        sourceMissionUnitView.setImage(image2);
 //                        else{
 //                            selectMissionUnitIndex = "";
 //                            sourceMissionUnitView.setImage(image1);
@@ -526,7 +535,7 @@ public class MsController {
 
                 int index = 0;
                 for(Unit unit: units){
-                    Pane missionUnitPane = new MissionUnitPane(unit, index, selectMissionUnitIndex).getPane();
+                    Pane missionUnitPane = new MissionUnitPane(unit, index).getPane();
                     missionUnitPane.setOnMouseEntered(missionUnitEventHandler);
                     missionUnitPane.setOnMouseClicked(missionUnitEventHandler);
                     missionUnitPane.setOnMouseExited(missionUnitEventHandler);
@@ -538,7 +547,6 @@ public class MsController {
                     if(index == 0){
                         sourceView.setImage(image2);
                         selectMissionUnitIndex = missionUnitPane.getId();
-
                     }
 
                     missionUnitGridPane.add(missionUnitPane, index++ , 0);
@@ -559,6 +567,29 @@ public class MsController {
 
                     for(ImageView imageView : imageViewMissionTeams){
                         imageView.setImage(image1);
+                    }
+
+                    for(TeamDTO teamDTO : teamDTOS_ALL){
+                        String ctxId = teamDTO.getCtxId();
+                        int team = teamDTO.getTeam();
+                        int role = teamDTO.getRole();
+                        if(team == Integer.parseInt(currentMissionId)){
+                            RadioButton selectButton = radio1;
+                            switch(role){
+                                case 2:
+                                    selectButton = radio2;
+                                    break;
+                                case 1:
+                                    selectButton = radio3;
+                                    break;
+
+                                case 3:
+                                default:
+                                    break;
+                            }
+                            toggleGroup.selectToggle(selectButton);
+                            break;
+                        }
                     }
 
                     if(!currentMissionId.equals(selectMissionTeamIndex)){
@@ -606,6 +637,27 @@ public class MsController {
                         imageView.setImage(image1);
                     }
 
+                    for(TeamDTO teamDTO : teamDTOS_ALL){
+                        String ctxId = teamDTO.getCtxId();
+                        int role = teamDTO.getRole();
+                        if(ctxId.equals(currentMissionMemberId)){
+                            RadioButton selectButton = radio1;
+                            switch(role){
+                                case 2:
+                                    selectButton = radio2;
+                                    break;
+                                case 1:
+                                    selectButton = radio3;
+                                    break;
+                                case 3:
+                                default:
+//                                    selectButton = radio1;
+                                    break;
+                            }
+                            toggleGroup.selectToggle(selectButton);
+                        }
+                    }
+
                     if(!currentMissionMemberId.equals(selectMissionMemberIndex)){
                         selectMissionMemberIndex = currentMissionMemberId;
                         sourceMissionMemberView.setImage(image2);
@@ -614,6 +666,7 @@ public class MsController {
                         }
                         lastMissionMemberView = sourceMissionMemberView;
                     }
+
 //                    else{
 //                        selectMissionMemberIndex = "";
 //                        sourceMissionMemberView.setImage(image1);
@@ -676,10 +729,21 @@ public class MsController {
 
             for(int x = 0; x < teamDTOS1.size(); x++){
                 TeamDTO teamDTO = teamDTOS1.get(x);
+                int team = teamDTO.getTeam();
+                int role = teamDTO.getRole();
 
                 if(x == 0){
                     selectMissionMemberIndex = teamDTO.getCtxId();
+                    if(role == 0){
+                        teamDTO.setRole(3);
+                    }
                 }
+//                if(team == 1 && "".equals(selectMissionMemberIndex)){
+//                    selectMissionMemberIndex = teamDTO.getCtxId();
+//                    if(role == 0){
+//                        teamDTO.setRole(3);
+//                    }
+//                }
 
                 Pane missionMemberPane = new MissionMemberPane(teamDTO.getName(), teamDTO.getCtxId(), selectMissionMemberIndex).getPane();
                 missionMemberPane.setOnMouseEntered(missionMemberEventHandler);
@@ -700,58 +764,96 @@ public class MsController {
                     int total = missionPane.getChildren().size();
                     int selectedIndex = missionPane.getChildren().indexOf(selectedRadioButton);
                     // 1 操作手 / 2 通訊兵 / 3 車長 / 4 指揮 / 5 教官
-                    int treatRole = total - selectedIndex;
+                    int treatRole = total - selectedIndex -3;
 
+                    System.out.println("total: " + total);
                     System.out.println("Selected Value: " + selectedValue);
                     System.out.println("Selected Index: " + selectedIndex);
                     System.out.println("treatRole: " + treatRole);
 
                     int teamIndex = Integer.parseInt(selectMissionTeamIndex);
 //                    int memberIndex = Integer.parseInt(selectMissionMemberIndex);
-                    int secondRole = 0;
-                    int thirdRole = 0;
+                    int firstRole = 3;
+                    int secondRole = 2;
+                    int thirdRole = 1;
+
+                    switch(treatRole){
+                        case 3:
+                            firstRole -= treatRole;
+                            break;
+                        case 2:
+                            secondRole -= treatRole;
+                            break;
+                        case 1:
+                            thirdRole -= treatRole;
+                            break;
+                    }
+
+                    System.out.println("teamDTOS_ALL : " + teamDTOS_ALL.size());
 
 
                     for(TeamDTO teamDTO : teamDTOS_ALL){
                         int team = teamDTO.getTeam();
                         int role = teamDTO.getRole();
                         String memberCtxId = teamDTO.getCtxId();
+                        System.out.println("memberCtxId: " + memberCtxId + " ; team : " + team + " ; teamIndex : " + teamIndex + " ; role : " + role);
 
                         if(teamIndex == team){
+                            System.out.println("teamIndex: " + teamIndex + " ; team : " + team);
+                            System.out.println("selectMissionMemberIndex: " + selectMissionMemberIndex + " ; memberCtxId : " + memberCtxId);
+
                             if(memberCtxId.equals(selectMissionMemberIndex)){
                                 teamDTO.setRole(treatRole);
-                            }
-
-                            if(role == 0){
-
-                                int otherRole = 1;
-                                if(treatRole == 2){
-                                    otherRole = 3;
-                                }else if(treatRole == 3){
-                                    otherRole = 2;
+                            }else if(role == 0){
+                                if(firstRole != 0){
+                                    teamDTO.setRole(firstRole);
+                                    firstRole = 0;
+                                }else if(secondRole != 0){
+                                    teamDTO.setRole(secondRole);
+                                    secondRole = 0;
+                                }else if(thirdRole != 0){
+                                    teamDTO.setRole(thirdRole);
+                                    thirdRole = 0;
                                 }
-
-                                teamDTO.setRole(otherRole);
-
-                                if(secondRole == 0){
-                                    secondRole = otherRole;
-                                }else if(thirdRole == 0){
-                                    thirdRole = otherRole;
+                            }else if(role == treatRole){
+                                if(treatRole == 3){
+                                    teamDTO.setRole(secondRole);
+                                    secondRole = 0;
+                                }else if(treatRole == 2){
+                                    teamDTO.setRole(thirdRole);
+                                    thirdRole = 0;
+                                }else{
+                                    teamDTO.setRole(firstRole);
+                                    firstRole = 0;
                                 }
+                            }else if(firstRole != 0){
+//                                if(treatRole == 2){
+//                                    teamDTO.setRole(thirdRole);
+//                                    thirdRole = 0;
+//                                }else{
+                                    teamDTO.setRole(firstRole);
+                                    firstRole = 0;
+//                                }
+                            }else if(secondRole != 0){
+//                                if(treatRole == 1){
+//                                    teamDTO.setRole(thirdRole);
+//                                    thirdRole = 0;
+//                                }else{
+//                                    teamDTO.setRole(firstRole);
+//                                    firstRole = 0;
+//                                }
+                                    teamDTO.setRole(secondRole);
+                                secondRole = 0;
 
-                            }else{
-
-                                if(secondRole == 0){
-                                    secondRole = role;
-//                                    teamDTO.setRole(secondRole);
-                                }else if(thirdRole == 0){
-                                    thirdRole = role;
-                                }
-
+                            }else if(thirdRole != 0){
+                                teamDTO.setRole(thirdRole);
+                                thirdRole = 0;
                             }
                         }
 
                     }
+
+
 
                 }
                 

@@ -30,7 +30,7 @@ public class MissionUnitPane extends Pane{
     private Image image0 = new Image("/images/ms/team_course/課程設定1預設.png");
     private Image image1 = new Image("/images/ms/team_course/課程設定1點選.png");
 
-    public MissionUnitPane(Unit unit, int index, String selectMissionUnitIndex) {
+    public MissionUnitPane(Unit unit, int index) {
         super();
         System.out.println("MissionUnitPane :  unit => " + unit);
 
@@ -53,7 +53,6 @@ public class MissionUnitPane extends Pane{
 
         pane.getChildren().add(imageView);
         pane.getChildren().add(label);
-//        selectMissionUnitIndex.equals(unit.getUnitId())
         if(index == 0){
             imageView.setImage(image1);
         }
