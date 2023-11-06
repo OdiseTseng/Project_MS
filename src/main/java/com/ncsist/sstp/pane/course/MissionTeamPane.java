@@ -35,12 +35,12 @@ public class MissionTeamPane extends Pane{
         String missionStr = "第";
 
         switch (team) {
-            case 0 -> missionStr += "一";
-            case 1 -> missionStr += "二";
-            case 2 -> missionStr += "三";
-            case 3 -> missionStr += "四";
-            case 4 -> missionStr += "五";
-            case 5 -> missionStr += "六";
+            case 1 -> missionStr += "一";
+            case 2 -> missionStr += "二";
+            case 3 -> missionStr += "三";
+            case 4 -> missionStr += "四";
+            case 5 -> missionStr += "五";
+            case 6 -> missionStr += "六";
         }
 
         missionStr += "組";

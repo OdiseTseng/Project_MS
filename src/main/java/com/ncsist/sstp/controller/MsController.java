@@ -473,7 +473,7 @@ public class MsController {
                         System.out.println("selectMissionUnitIndex :" + selectMissionUnitIndex);
 
                         for(ImageView imageView : imageViewMissionUnits){
-                            imageView.setImage(image1);
+                            imageView.setImage(image0);
                         }
 
                         String selectedUnitText = "";
@@ -566,7 +566,7 @@ public class MsController {
                     System.out.println("mouse clicked");
 
                     for(ImageView imageView : imageViewMissionTeams){
-                        imageView.setImage(image1);
+                        imageView.setImage(image0);
                     }
 
                     for(TeamDTO teamDTO : teamDTOS_ALL){
@@ -575,17 +575,11 @@ public class MsController {
                         int role = teamDTO.getRole();
                         if(team == Integer.parseInt(currentMissionId)){
                             RadioButton selectButton = radio1;
-                            switch(role){
-                                case 2:
-                                    selectButton = radio2;
-                                    break;
-                                case 1:
-                                    selectButton = radio3;
-                                    break;
-
-                                case 3:
-                                default:
-                                    break;
+                            switch (role) {
+                                case 2 -> selectButton = radio2;
+                                case 1 -> selectButton = radio3;
+                                default -> {
+                                }
                             }
                             toggleGroup.selectToggle(selectButton);
                             break;
@@ -594,12 +588,12 @@ public class MsController {
 
                     if(!currentMissionId.equals(selectMissionTeamIndex)){
                         selectMissionTeamIndex = currentMissionId;
-                        sourceMissionView.setImage(image2);
-                        if(lastMissionTeamView != null){
+                        if(lastMissionTeamView != null && lastClassView != sourceMissionView){
                             lastMissionTeamView.setImage(image0);
                         }
                         lastMissionTeamView = sourceMissionView;
                     }
+                    sourceMissionView.setImage(image2);
 //                    else{
 //                        selectMissionTeamIndex = "";
 //                        sourceMissionView.setImage(image1);
@@ -615,73 +609,6 @@ public class MsController {
                 }else if(eventType == MouseEvent.MOUSE_EXITED){
                     if(!currentMissionId.equals(selectMissionTeamIndex)) {
                         sourceMissionView.setImage(image0);
-                    }
-
-                }
-            };
-
-            EventHandler missionMemberEventHandler = event1 -> {
-                System.out.println("missionMemberEventHandler:");
-                EventType eventType = event1.getEventType();
-                Pane sourceMissionMemberPane = (Pane) event1.getSource();
-                String currentMissionMemberId = sourceMissionMemberPane.getId();
-                ImageView sourceMissionMemberView = (ImageView) sourceMissionMemberPane.getChildren().get(0);
-
-                if(eventType == MouseEvent.MOUSE_CLICKED){
-                    System.out.println("mouse clicked");
-
-                    System.out.println("currentMissionMemberId :" + currentMissionMemberId);
-                    System.out.println("selectMissionMemberIndex :" + selectMissionMemberIndex);
-
-                    for(ImageView imageView : imageViewMissionMembers){
-                        imageView.setImage(image1);
-                    }
-
-                    for(TeamDTO teamDTO : teamDTOS_ALL){
-                        String ctxId = teamDTO.getCtxId();
-                        int role = teamDTO.getRole();
-                        if(ctxId.equals(currentMissionMemberId)){
-                            RadioButton selectButton = radio1;
-                            switch(role){
-                                case 2:
-                                    selectButton = radio2;
-                                    break;
-                                case 1:
-                                    selectButton = radio3;
-                                    break;
-                                case 3:
-                                default:
-//                                    selectButton = radio1;
-                                    break;
-                            }
-                            toggleGroup.selectToggle(selectButton);
-                        }
-                    }
-
-                    if(!currentMissionMemberId.equals(selectMissionMemberIndex)){
-                        selectMissionMemberIndex = currentMissionMemberId;
-                        sourceMissionMemberView.setImage(image2);
-                        if(lastMissionMemberView != null){
-                            lastMissionMemberView.setImage(image0);
-                        }
-                        lastMissionMemberView = sourceMissionMemberView;
-                    }
-
-//                    else{
-//                        selectMissionMemberIndex = "";
-//                        sourceMissionMemberView.setImage(image1);
-//                        lastMissionMemberView = null;
-//                    }
-
-
-                }else if(eventType == MouseEvent.MOUSE_ENTERED){
-                    if(!currentMissionMemberId.equals(selectMissionMemberIndex)){
-                        sourceMissionMemberView.setImage(image1);
-                    }
-
-                }else if(eventType == MouseEvent.MOUSE_EXITED){
-                    if(!currentMissionMemberId.equals(selectMissionMemberIndex)) {
-                        sourceMissionMemberView.setImage(image0);
                     }
 
                 }
@@ -704,16 +631,17 @@ public class MsController {
 //            missionPane
             int teams = teamDTOS1.isEmpty() ? 0: 1;
                 teams += teamDTOS2.isEmpty() ? 0: 1;
-                int currentTeam = 0;
+                int currentTeam = 1;
 
                 imageViewMissionTeams = new ArrayList<>();
 
             for(int x = 0; x < 4; x++){
-                boolean disablePane = teams < x + 1;
-                Pane missionTeamPane = new MissionTeamPane(x, currentTeam, disablePane).getPane();
+                boolean disablePane = teams  < x + 1;
+                Pane missionTeamPane = new MissionTeamPane(x + 1, currentTeam, disablePane).getPane();
 
                 ImageView sourceView = (ImageView)missionTeamPane.getChildren().get(0);
                 imageViewMissionTeams.add(sourceView);
+
 
                 System.out.println("x : " + x + " ; teams : " + teams +" ; disablePane : " + disablePane );
                 if(!disablePane){
@@ -725,19 +653,116 @@ public class MsController {
                 missionTeamGridPane.add(missionTeamPane, x, 0);
             }
 
+
+            //** ----------------------------------------------------------------------------
+
+            EventHandler missionMemberEventHandler = event1 -> {
+                System.out.println("missionMemberEventHandler:");
+                EventType eventType = event1.getEventType();
+                Pane sourceMissionMemberPane = (Pane) event1.getSource();
+                String currentMissionMemberId = sourceMissionMemberPane.getId();
+                ImageView sourceMissionMemberView = (ImageView) sourceMissionMemberPane.getChildren().get(0);
+
+                if(eventType == MouseEvent.MOUSE_CLICKED){
+                    System.out.println("mouse clicked");
+
+                    System.out.println("currentMissionMemberId :" + currentMissionMemberId);
+                    System.out.println("selectMissionMemberIndex :" + selectMissionMemberIndex);
+
+                    for(ImageView imageView : imageViewMissionMembers){
+                        imageView.setImage(image0);
+                    }
+
+                    RadioButton selectButton = radio1;
+                    for(TeamDTO teamDTO : teamDTOS_ALL){
+                        String ctxId = teamDTO.getCtxId();
+                        String name = teamDTO.getName();
+                        int role = teamDTO.getRole();
+                        System.out.println("ctxId : " + ctxId + " ; currentMissionMemberId : " + currentMissionMemberId + " ; role : " + role + " ; name : " + name);
+                        if(ctxId.equals(currentMissionMemberId)){
+                            switch (role) {
+                                case 2 -> selectButton = radio2;
+                                case 1 -> selectButton = radio3;
+                                default -> {
+//                                    selectButton = radio1;
+                                }
+                            }
+
+                            System.out.println("change button to role : " + role  + " ;; name: " + name);
+
+
+                            if(!currentMissionMemberId.equals(selectMissionMemberIndex)){
+                                selectMissionMemberIndex = currentMissionMemberId;
+                                if(lastMissionMemberView != null && lastMissionMemberView != sourceMissionMemberView){
+                                    lastMissionMemberView.setImage(image0);
+                                }
+                                lastMissionMemberView = sourceMissionMemberView;
+                            }
+                            
+                            toggleGroup.selectToggle(selectButton);
+                            break;
+                        }
+                    }
+
+
+                    sourceMissionMemberView.setImage(image2);
+
+//                    else{
+//                        selectMissionMemberIndex = "";
+//                        sourceMissionMemberView.setImage(image1);
+//                        lastMissionMemberView = null;
+//                    }
+
+
+                }else if(eventType == MouseEvent.MOUSE_ENTERED){
+                    if(!currentMissionMemberId.equals(selectMissionMemberIndex)){
+                        sourceMissionMemberView.setImage(image1);
+                    }
+
+                }else if(eventType == MouseEvent.MOUSE_EXITED){
+                    if(!currentMissionMemberId.equals(selectMissionMemberIndex)) {
+                        sourceMissionMemberView.setImage(image0);
+                    }
+
+                }
+            };
+
             imageViewMissionMembers = new ArrayList<>();
 
             for(int x = 0; x < teamDTOS1.size(); x++){
                 TeamDTO teamDTO = teamDTOS1.get(x);
+                String name = teamDTO.getName();
+                String ctxId = teamDTO.getCtxId();
                 int team = teamDTO.getTeam();
                 int role = teamDTO.getRole();
+                System.out.println("check before TeamDTOS1 ::  name = " + name + " ;; ctxId = " + ctxId + " ;; team = " + team + " ;; role : " + role + " ;; x = " + x);
+
+//                if(x == 0){
+//                    selectMissionMemberIndex = teamDTO.getCtxId();
+//                    if(role == 0){
+//                        teamDTO.setRole(3);
+//                    }
+//                }
 
                 if(x == 0){
                     selectMissionMemberIndex = teamDTO.getCtxId();
-                    if(role == 0){
-                        teamDTO.setRole(3);
+                }
+//                int y = 0;
+                if(role == 0){
+                    for(TeamDTO teamDTO1 : teamDTOS_ALL){
+
+                        if(ctxId.equals(teamDTO1.getCtxId())){
+//                            teamDTO1.setRole(3 - x);
+                            teamDTO.setRole(3 - x);
+                            break;
+                        }
+//                        y++;
                     }
                 }
+
+//                System.out.println("check after TeamDTOS1 ::  name = " + name + " ;; ctxId = " + ctxId + " ;; team = " + team + " ;; role : " + teamDTO.getRole() + " ;; x = " + x);
+//                System.out.println("teamDTOS_ALL : " + teamDTOS_ALL.get(y).getRole());
+
 //                if(team == 1 && "".equals(selectMissionMemberIndex)){
 //                    selectMissionMemberIndex = teamDTO.getCtxId();
 //                    if(role == 0){
@@ -745,7 +770,7 @@ public class MsController {
 //                    }
 //                }
 
-                Pane missionMemberPane = new MissionMemberPane(teamDTO.getName(), teamDTO.getCtxId(), selectMissionMemberIndex).getPane();
+                Pane missionMemberPane = new MissionMemberPane(name, ctxId, selectMissionMemberIndex).getPane();
                 missionMemberPane.setOnMouseEntered(missionMemberEventHandler);
                 missionMemberPane.setOnMouseClicked(missionMemberEventHandler);
                 missionMemberPane.setOnMouseExited(missionMemberEventHandler);
@@ -757,7 +782,14 @@ public class MsController {
                 missionMemberGridPane.add(missionMemberPane, x , 0);
             }
 
+            System.out.println("check before click: ");
+            for(TeamDTO teamDTO : teamDTOS_ALL){
+                System.out.println("teamDTO : " + teamDTO);
+            }
+
+
             toggleGroup.selectedToggleProperty().addListener((observable, oldVal, newVal)->{
+                System.out.println("toggleGroup ---------------------------------------------------------");
                 if(newVal != null){
                     RadioButton selectedRadioButton = (RadioButton)newVal;
                     String selectedValue = selectedRadioButton.getText();
@@ -766,10 +798,10 @@ public class MsController {
                     // 1 操作手 / 2 通訊兵 / 3 車長 / 4 指揮 / 5 教官
                     int treatRole = total - selectedIndex -3;
 
-                    System.out.println("total: " + total);
-                    System.out.println("Selected Value: " + selectedValue);
-                    System.out.println("Selected Index: " + selectedIndex);
-                    System.out.println("treatRole: " + treatRole);
+                    System.out.println("toggleGroup total: " + total);
+                    System.out.println("toggleGroup Selected Value: " + selectedValue);
+                    System.out.println("toggleGroup Selected Index: " + selectedIndex);
+                    System.out.println("toggleGroup treatRole: " + treatRole);
 
                     int teamIndex = Integer.parseInt(selectMissionTeamIndex);
 //                    int memberIndex = Integer.parseInt(selectMissionMemberIndex);
@@ -777,78 +809,169 @@ public class MsController {
                     int secondRole = 2;
                     int thirdRole = 1;
 
-                    switch(treatRole){
-                        case 3:
-                            firstRole -= treatRole;
-                            break;
-                        case 2:
-                            secondRole -= treatRole;
-                            break;
-                        case 1:
-                            thirdRole -= treatRole;
-                            break;
+//                    switch (treatRole) {
+//                        case 3 -> firstRole -= treatRole;
+//                        case 2 -> secondRole -= treatRole;
+//                        case 1 -> thirdRole -= treatRole;
+//                    }
+
+                    switch (treatRole) {
+                        case 3 -> firstRole = 0;
+                        case 2 -> secondRole = 0;
+                        case 1 -> thirdRole = 0;
                     }
 
-                    System.out.println("teamDTOS_ALL : " + teamDTOS_ALL.size());
+                    System.out.println("toggleGroup teamDTOS_ALL : " + teamDTOS_ALL.size());
 
+                    int oriRole1 = 0;
+                    int oriRole2 = 0;
+                    int oriRole3 = 0;
 
+                    //先檢查TEAM的ROLE
+                    for(TeamDTO teamDTO : teamDTOS_ALL) {
+                        int team = teamDTO.getTeam();
+                        int role = teamDTO.getRole();
+                        String name = teamDTO.getName();
+                        String memberCtxId = teamDTO.getCtxId();
+                        System.out.println("toggleGroup memberCtxId: " + memberCtxId + " ; team : " + team + " ; teamIndex : " + teamIndex + " ; role : " + role + " ; name : " + name);
+
+                        if (teamIndex == team) {
+                            System.out.println("toggleGroup teamIndex: " + teamIndex + " ; team : " + team + " ; treatRole: " + treatRole);
+                            System.out.println("toggleGroup selectMissionMemberIndex: " + selectMissionMemberIndex + " ; memberCtxId : " + memberCtxId);
+
+                            if (memberCtxId.equals(selectMissionMemberIndex)) {
+//                                teamDTO.setRole(treatRole);
+                                oriRole1 = role;
+                            }else if(oriRole2 == 0){
+                                oriRole2 = role;
+                            }else if(oriRole3 == 0){
+                                oriRole3 = role;
+                            }
+                        }
+                    }
+
+                    System.out.println("oriRole1 : " + oriRole1 + "oriRole2 : " + oriRole2 + "oriRole3 : " + oriRole3);
+
+                    //再設定TEAM ROLE
                     for(TeamDTO teamDTO : teamDTOS_ALL){
                         int team = teamDTO.getTeam();
                         int role = teamDTO.getRole();
+                        String name = teamDTO.getName();
                         String memberCtxId = teamDTO.getCtxId();
-                        System.out.println("memberCtxId: " + memberCtxId + " ; team : " + team + " ; teamIndex : " + teamIndex + " ; role : " + role);
+                        System.out.println("toggleGroup memberCtxId: " + memberCtxId + " ; team : " + team + " ; teamIndex : " + teamIndex + " ; role : " + role + " ; name : " + name);
 
                         if(teamIndex == team){
-                            System.out.println("teamIndex: " + teamIndex + " ; team : " + team);
-                            System.out.println("selectMissionMemberIndex: " + selectMissionMemberIndex + " ; memberCtxId : " + memberCtxId);
+                            System.out.println("toggleGroup teamIndex: " + teamIndex + " ; team : " + team + " ; treatRole: " + treatRole);
+                            System.out.println("toggleGroup selectMissionMemberIndex: " + selectMissionMemberIndex + " ; memberCtxId : " + memberCtxId);
 
                             if(memberCtxId.equals(selectMissionMemberIndex)){
                                 teamDTO.setRole(treatRole);
-                            }else if(role == 0){
-                                if(firstRole != 0){
-                                    teamDTO.setRole(firstRole);
-                                    firstRole = 0;
-                                }else if(secondRole != 0){
-                                    teamDTO.setRole(secondRole);
-                                    secondRole = 0;
-                                }else if(thirdRole != 0){
-                                    teamDTO.setRole(thirdRole);
-                                    thirdRole = 0;
+                            }else{
+                                if(oriRole2 != 0 && oriRole2 == treatRole){
+                                    if(firstRole != 0){
+                                        teamDTO.setRole(firstRole);
+                                        oriRole2 = 0;
+                                        firstRole = 0;
+                                    }else if(secondRole != 0){
+                                        teamDTO.setRole(secondRole);
+                                        oriRole2 = 0;
+                                        secondRole = 0;
+                                    }else {
+                                        teamDTO.setRole(thirdRole);
+                                        oriRole2 = 0;
+                                        thirdRole = 0;
+                                    }
+                                }else if(oriRole3 != 0 && oriRole3 == treatRole){
+                                    if(firstRole != 0){
+                                        teamDTO.setRole(firstRole);
+                                        oriRole3 = 0;
+                                        firstRole = 0;
+                                    }else if(secondRole != 0){
+                                        teamDTO.setRole(secondRole);
+                                        oriRole3 = 0;
+                                        secondRole = 0;
+                                    }else {
+                                        teamDTO.setRole(thirdRole);
+                                        oriRole3 = 0;
+                                        thirdRole = 0;
+                                    }
                                 }
-                            }else if(role == treatRole){
-                                if(treatRole == 3){
-                                    teamDTO.setRole(secondRole);
-                                    secondRole = 0;
-                                }else if(treatRole == 2){
-                                    teamDTO.setRole(thirdRole);
-                                    thirdRole = 0;
-                                }else{
-                                    teamDTO.setRole(firstRole);
-                                    firstRole = 0;
-                                }
-                            }else if(firstRole != 0){
-//                                if(treatRole == 2){
+                            }
+//                            if(memberCtxId.equals(selectMissionMemberIndex)){
+//                                teamDTO.setRole(treatRole);
+//                            }else if(role == 0){
+//                                if(firstRole != 0){
+//                                    teamDTO.setRole(firstRole);
+//                                    firstRole = 0;
+//                                }else if(secondRole != 0){
+//                                    teamDTO.setRole(secondRole);
+//                                    secondRole = 0;
+//                                }else if(thirdRole != 0){
 //                                    teamDTO.setRole(thirdRole);
 //                                    thirdRole = 0;
-//                                }else{
-                                    teamDTO.setRole(firstRole);
-                                    firstRole = 0;
 //                                }
-                            }else if(secondRole != 0){
-//                                if(treatRole == 1){
+//                            }else {
+//                                if(treatRole == 3){
+//                                    if(secondRole != 0){
+//                                        teamDTO.setRole(secondRole);
+//                                        secondRole = 0;
+//                                    }else if(thirdRole != 0){
+//                                        teamDTO.setRole(thirdRole);
+//                                        thirdRole = 0;
+//                                    }
+//                                }else if(treatRole == 2){
+//                                    if(firstRole != 0){
+//                                        teamDTO.setRole(firstRole);
+//                                        firstRole = 0;
+//                                    }else if(thirdRole != 0){
+//                                        teamDTO.setRole(thirdRole);
+//                                        thirdRole = 0;
+//                                    }
+//                                }else if(treatRole == 1){
+//                                    if(firstRole != 0){
+//                                        teamDTO.setRole(firstRole);
+//                                        firstRole = 0;
+//                                    }else if(secondRole != 0){
+//                                        teamDTO.setRole(secondRole);
+//                                        secondRole = 0;
+//                                    }
+//                                }
+//                            }
+
+//                            else if(role == treatRole){
+//                                if(treatRole == 3){
+//                                    teamDTO.setRole(secondRole);
+//                                    secondRole = 0;
+//                                }else if(treatRole == 2){
 //                                    teamDTO.setRole(thirdRole);
 //                                    thirdRole = 0;
 //                                }else{
 //                                    teamDTO.setRole(firstRole);
 //                                    firstRole = 0;
 //                                }
-                                    teamDTO.setRole(secondRole);
-                                secondRole = 0;
-
-                            }else if(thirdRole != 0){
-                                teamDTO.setRole(thirdRole);
-                                thirdRole = 0;
-                            }
+//                            }else if(firstRole != 0){
+////                                if(treatRole == 2){
+////                                    teamDTO.setRole(thirdRole);
+////                                    thirdRole = 0;
+////                                }else{
+//                                    teamDTO.setRole(firstRole);
+//                                    firstRole = 0;
+////                                }
+//                            }else if(secondRole != 0){
+////                                if(treatRole == 1){
+////                                    teamDTO.setRole(thirdRole);
+////                                    thirdRole = 0;
+////                                }else{
+////                                    teamDTO.setRole(firstRole);
+////                                    firstRole = 0;
+////                                }
+//                                    teamDTO.setRole(secondRole);
+//                                secondRole = 0;
+//
+//                            }else if(thirdRole != 0){
+//                                teamDTO.setRole(thirdRole);
+//                                thirdRole = 0;
+//                            }
                         }
 
                     }
@@ -858,6 +981,8 @@ public class MsController {
                 }
                 
             });
+
+            toggleGroup.selectToggle(radio1);
         }
     }
 
@@ -1372,7 +1497,7 @@ public class MsController {
                 System.out.println("mouse clicked");
 
                 for(ImageView imageView : imageViewClasses){
-                    imageView.setImage(image1);
+                    imageView.setImage(image0);
                 }
 
                 if(!currentId.equals(selectClassIndex)){
@@ -1442,7 +1567,7 @@ public class MsController {
                 System.out.println("mouse clicked");
 
                 for(ImageView imageView : imageViewCourses){
-                    imageView.setImage(image1);
+                    imageView.setImage(image0);
                 }
 
                 if(!currentId.equals(selectCourseIndex)){
