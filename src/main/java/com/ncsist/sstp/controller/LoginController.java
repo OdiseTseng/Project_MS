@@ -77,7 +77,7 @@ public class LoginController {
                     Parent esRoot = esLoader.load();
                     Scene esScene = new Scene(esRoot);
                     EsController esController = esLoader.getController();
-                    esController.initializeUserData(jsonNode);
+//                    esController.initializeUserData(jsonNode);
 
                     primaryStage.setScene(esScene);
                     primaryStage.setTitle("ES");
