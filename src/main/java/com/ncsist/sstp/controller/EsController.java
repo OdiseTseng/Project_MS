@@ -3,6 +3,8 @@ package com.ncsist.sstp.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ncsist.sstp.server.controller.NettyClientMsgController;
+import com.ncsist.sstp.utils.text.NettyCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +23,12 @@ import java.net.HttpURLConnection;
 public class EsController {
     @FXML
     private TextArea textArea;
+    public void initialize(){
+        String ctxId = NettyClientMsgController.getClientCtxId();
+        NettyClientMsgController nettyClientMsgController = NettyClientMsgController.getInstance();
+        nettyClientMsgController.sendCMDMsg(NettyCode.TEAM_WAITING_JOIN, ctxId);
+
+    }
     public void initializeUserData(JsonNode jsonNode) {
         String name = jsonNode.get("name").asText();
         String info = "學員 :   "+name;

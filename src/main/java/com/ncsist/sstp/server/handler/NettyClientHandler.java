@@ -123,6 +123,8 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		System.out.println("exceptionCaught : ");
+		System.out.println("cause : " + cause.getMessage());
+//
 //		System.out.println("exceptionCaught : " + ctx.channel().remoteAddress().toString());
 //		super.exceptionCaught(ctx, cause);
 	}

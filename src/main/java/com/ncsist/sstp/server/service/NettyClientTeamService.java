@@ -55,34 +55,41 @@ public class NettyClientTeamService {
 
             case NettyCode.TEAM_WAITING_COACH_GET_ALL:         //05
 //                TeamDTO[] teamDTOS = DTOParser.parseStringToDTOs(msg, TeamDTO[].class);
-                TeamDTO[] teamDTOs;
-                try {
-                    teamDTOs = (TeamDTO[])DTOParser.parseStringToDTO(msg, TeamDTO[].class);
+                TeamDTO[] teamDTOs = null;
 
-                } catch (JsonProcessingException e) {
-                    System.out.println("JsonProcessingException : " + e.getMessage());
-                    throw new RuntimeException(e);
+                if(!msg.trim().isEmpty()){
+                    try {
+                        teamDTOs = (TeamDTO[])DTOParser.parseStringToDTO(msg, TeamDTO[].class);
+
+                    } catch (JsonProcessingException e) {
+                        System.out.println("JsonProcessingException : " + e.getMessage());
+                        throw new RuntimeException(e);
+                    }
+                    System.out.println("teamDTOs : " + teamDTOs.length);
                 }
 
-                System.out.println("teamDTOs : " + teamDTOs.length);
+                System.out.println("teamDTOs : " + teamDTOs);
 
 
 
-                boolean findTeam = false;
-                for(TeamDTO teamDTO: teamDTOs){
-                    String ctxId = teamDTO.getCtxId();
-                    findTeam = false;
-                    System.out.println("teamDTO before : " + teamDTO);
-                    for(TeamDTO teamDTO2 : teamDTOList){
-                        String ctxId2 = teamDTO2.getCtxId();
-                        if(ctxId.equals(ctxId2)){
-                            findTeam = true;
-                            break;
+                if(teamDTOs != null){
+                    boolean findTeam = false;
+                    for(TeamDTO teamDTO: teamDTOs){
+                        String ctxId = teamDTO.getCtxId();
+                        findTeam = false;
+                        System.out.println("teamDTO before : " + teamDTO);
+                        for(TeamDTO teamDTO2 : teamDTOList){
+                            String ctxId2 = teamDTO2.getCtxId();
+                            if(ctxId.equals(ctxId2)){
+                                findTeam = true;
+                                break;
+                            }
+                        }
+                        if(!findTeam){
+                            teamDTOList.add(teamDTO);
                         }
                     }
-                    if(!findTeam){
-                        teamDTOList.add(teamDTO);
-                    }
+                    
                 }
 
 

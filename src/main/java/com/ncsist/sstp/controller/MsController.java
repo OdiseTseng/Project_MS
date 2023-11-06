@@ -582,6 +582,7 @@ public class MsController {
                                 }
                             }
                             toggleGroup.selectToggle(selectButton);
+                            selectButton.setSelected(true);
                             break;
                         }
                     }
@@ -700,6 +701,7 @@ public class MsController {
                             }
                             
                             toggleGroup.selectToggle(selectButton);
+                            selectButton.setSelected(true);
                             break;
                         }
                     }
@@ -850,8 +852,14 @@ public class MsController {
                         }
                     }
 
-                    System.out.println("oriRole1 : " + oriRole1 + "oriRole2 : " + oriRole2 + "oriRole3 : " + oriRole3);
+                    System.out.println("firstRole : " + firstRole + " ;; secondRole : " + secondRole + " ;; thirdRole : " + thirdRole);
+                    System.out.println("oriRole1 : " + oriRole1 + " ;; oriRole2 : " + oriRole2 + " ;;oriRole3 : " + oriRole3);
 
+                    int x = 3;
+                    int y = 0;
+                    boolean firstStart = false;
+                    boolean secondStart = false;
+                    boolean thirdStart = false;
                     //再設定TEAM ROLE
                     for(TeamDTO teamDTO : teamDTOS_ALL){
                         int team = teamDTO.getTeam();
@@ -866,123 +874,133 @@ public class MsController {
 
                             if(memberCtxId.equals(selectMissionMemberIndex)){
                                 teamDTO.setRole(treatRole);
+                                y = x;
                             }else{
-                                if(oriRole2 != 0 && oriRole2 == treatRole){
-                                    if(firstRole != 0){
-                                        teamDTO.setRole(firstRole);
-                                        oriRole2 = 0;
-                                        firstRole = 0;
-                                    }else if(secondRole != 0){
-                                        teamDTO.setRole(secondRole);
-                                        oriRole2 = 0;
-                                        secondRole = 0;
-                                    }else {
-                                        teamDTO.setRole(thirdRole);
-                                        oriRole2 = 0;
-                                        thirdRole = 0;
-                                    }
-                                }else if(oriRole3 != 0 && oriRole3 == treatRole){
-                                    if(firstRole != 0){
-                                        teamDTO.setRole(firstRole);
-                                        oriRole3 = 0;
-                                        firstRole = 0;
-                                    }else if(secondRole != 0){
-                                        teamDTO.setRole(secondRole);
-                                        oriRole3 = 0;
-                                        secondRole = 0;
-                                    }else {
-                                        teamDTO.setRole(thirdRole);
-                                        oriRole3 = 0;
-                                        thirdRole = 0;
-                                    }
-                                }
-                            }
-//                            if(memberCtxId.equals(selectMissionMemberIndex)){
-//                                teamDTO.setRole(treatRole);
-//                            }else if(role == 0){
-//                                if(firstRole != 0){
-//                                    teamDTO.setRole(firstRole);
-//                                    firstRole = 0;
-//                                }else if(secondRole != 0){
-//                                    teamDTO.setRole(secondRole);
-//                                    secondRole = 0;
-//                                }else if(thirdRole != 0){
-//                                    teamDTO.setRole(thirdRole);
-//                                    thirdRole = 0;
+//                                switch (y) {
+//                                    case 0, 1, 2 -> {
+//                                        if (treatRole == 3 && role == treatRole) {
+//                                            teamDTO.setRole(2);
+//                                        } else if (treatRole == 2 && role == treatRole) {
+//                                            teamDTO.setRole(1);
+//                                        } else if (treatRole == 1) {
+//                                            teamDTO.setRole(3);
+//                                        }
+//                                    }
+//                                    default -> {
+//                                    }
 //                                }
-//                            }else {
+                                if(firstRole > 0){
+                                    teamDTO.setRole(firstRole);
+                                    firstRole = 0;
+                                }else if(secondRole > 0){
+                                    teamDTO.setRole(secondRole);
+                                    secondRole = 0;
+                                }else if(thirdRole > 0){
+                                    teamDTO.setRole(thirdRole);
+                                    thirdRole = 0;
+                                }
+
 //                                if(treatRole == 3){
-//                                    if(secondRole != 0){
-//                                        teamDTO.setRole(secondRole);
-//                                        secondRole = 0;
-//                                    }else if(thirdRole != 0){
-//                                        teamDTO.setRole(thirdRole);
-//                                        thirdRole = 0;
+//                                    switch (x) {
+//                                        case 3 -> {
+//                                            teamDTO.setRole(2);
+//                                        }
+//                                        case 2 -> {
+//                                            if(y == 1){
+//                                                teamDTO.setRole(2);
+//                                            }
+//                                        }
+//                                        case 1 -> {
+////                                            teamDTO.setRole(2);
+//                                        }
+//                                        default -> {
+//                                        }
 //                                    }
 //                                }else if(treatRole == 2){
-//                                    if(firstRole != 0){
-//                                        teamDTO.setRole(firstRole);
-//                                        firstRole = 0;
-//                                    }else if(thirdRole != 0){
-//                                        teamDTO.setRole(thirdRole);
-//                                        thirdRole = 0;
+//                                    switch (x) {
+//                                        case 3 -> {
+////                                            teamDTO.setRole(3);
+//                                        }
+//                                        case 2 -> {
+//                                            teamDTO.setRole(1);
+//                                        }
+//                                        case 1 -> {
+////                                            teamDTO.setRole(1);
+//                                        }
+//                                        default -> {
+//                                        }
 //                                    }
+//
 //                                }else if(treatRole == 1){
+//                                    switch (x) {
+//                                        case 3 -> {
+////                                            teamDTO.setRole(3);
+//                                        }
+//                                        case 2 -> {
+////                                            teamDTO.setRole(2);
+//                                        }
+//                                        case 1 -> {
+//                                            teamDTO.setRole(3);
+//                                        }
+//                                        default -> {
+//                                        }
+//                                    }
+//
+//                                }
+
+
+//                                if(oriRole1 != 0 && oriRole1 == treatRole){
 //                                    if(firstRole != 0){
 //                                        teamDTO.setRole(firstRole);
+//                                        oriRole1 = 0;
 //                                        firstRole = 0;
 //                                    }else if(secondRole != 0){
 //                                        teamDTO.setRole(secondRole);
+//                                        oriRole1 = 0;
 //                                        secondRole = 0;
+//                                    }else {
+//                                        teamDTO.setRole(thirdRole);
+//                                        oriRole1 = 0;
+//                                        thirdRole = 0;
+//                                    }
+//                                }else if(oriRole2 != 0 && oriRole2 == treatRole){
+//                                    if(firstRole != 0){
+//                                        teamDTO.setRole(firstRole);
+//                                        oriRole2 = 0;
+//                                        firstRole = 0;
+//                                    }else if(secondRole != 0){
+//                                        teamDTO.setRole(secondRole);
+//                                        oriRole2 = 0;
+//                                        secondRole = 0;
+//                                    }else {
+//                                        teamDTO.setRole(thirdRole);
+//                                        oriRole2 = 0;
+//                                        thirdRole = 0;
+//                                    }
+//                                }else if(oriRole3 != 0 && oriRole3 == treatRole){
+//                                    if(firstRole != 0){
+//                                        teamDTO.setRole(firstRole);
+//                                        oriRole3 = 0;
+//                                        firstRole = 0;
+//                                    }else if(secondRole != 0){
+//                                        teamDTO.setRole(secondRole);
+//                                        oriRole3 = 0;
+//                                        secondRole = 0;
+//                                    }else {
+//                                        teamDTO.setRole(thirdRole);
+//                                        oriRole3 = 0;
+//                                        thirdRole = 0;
 //                                    }
 //                                }
-//                            }
-
-//                            else if(role == treatRole){
-//                                if(treatRole == 3){
-//                                    teamDTO.setRole(secondRole);
-//                                    secondRole = 0;
-//                                }else if(treatRole == 2){
-//                                    teamDTO.setRole(thirdRole);
-//                                    thirdRole = 0;
-//                                }else{
-//                                    teamDTO.setRole(firstRole);
-//                                    firstRole = 0;
-//                                }
-//                            }else if(firstRole != 0){
-////                                if(treatRole == 2){
-////                                    teamDTO.setRole(thirdRole);
-////                                    thirdRole = 0;
-////                                }else{
-//                                    teamDTO.setRole(firstRole);
-//                                    firstRole = 0;
-////                                }
-//                            }else if(secondRole != 0){
-////                                if(treatRole == 1){
-////                                    teamDTO.setRole(thirdRole);
-////                                    thirdRole = 0;
-////                                }else{
-////                                    teamDTO.setRole(firstRole);
-////                                    firstRole = 0;
-////                                }
-//                                    teamDTO.setRole(secondRole);
-//                                secondRole = 0;
-//
-//                            }else if(thirdRole != 0){
-//                                teamDTO.setRole(thirdRole);
-//                                thirdRole = 0;
-//                            }
+                            }
+                            x--;
                         }
-
                     }
-
-
-
                 }
-                
             });
 
             toggleGroup.selectToggle(radio1);
+            radio1.setSelected(true);
         }
     }
 
@@ -1269,10 +1287,10 @@ public class MsController {
 
                         teamSelectedGridPane1.add(pane, x, y);
 
-                        if(x == 1){
-                            x = 0;
-                            y++;
-                        }
+//                        if(x == 1){
+//                            x = 0;
+//                            y++;
+//                        }
                     }
 
                     y = 0;
@@ -1287,10 +1305,10 @@ public class MsController {
                         Pane pane = new TeamUserPane(ctxId, name, team, true).getPane();
                         teamSelectedGridPane2.add(pane, x, y);
 
-                        if(x == 1){
-                            x = 0;
-                            y++;
-                        }
+//                        if(x == 1){
+//                            x = 0;
+//                            y++;
+//                        }
                     }
 
                     tips.setImage(imageTip2);
