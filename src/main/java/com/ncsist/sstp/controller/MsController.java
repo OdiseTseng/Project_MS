@@ -25,8 +25,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class MsController {
 
@@ -1716,6 +1718,38 @@ public class MsController {
     @FXML
     private void watchCourseAction(MouseEvent event) throws IOException {
         System.out.println("watchCourseAction");
+
+//        String cmd = "iNetConsole.exe";
+//        String cmd = "\"C:\\Program Files (x86)\\SanFong\\EZ-WinMate Teacher\\iNetConsole.exe\"";
+        String cmd = "\"C:\\work\\start-WinMate.cmd\"";
+        ProcessBuilder processBuilder = new ProcessBuilder(cmd);
+//        ProcessBuilder processBuilder = new ProcessBuilder("runas", "/user:yctse", cmd);
+
+//        String[]  startAsAdmin= new String [] {
+//                "CMD.EXE",
+//                "/C",
+//                "RUNAS /profile /user:"
+//                        + "administrator"
+//                        + " ", "start", "notepad"};
+//
+//        Process runtimeProcess = Runtime.getRuntime().exec(startAsAdmin);
+
+        try {
+            Process process = processBuilder.start();
+
+//            int exitCode = runtimeProcess.waitFor();
+            boolean exitCode = process.waitFor(3000, TimeUnit.SECONDS);
+            System.out.println("Exit code: " + exitCode);
+            //1
+
+            System.out.println("Info: " + process.toString());
+            System.out.println("Info: " + process.info().toString());
+            //Info: [user: Optional[USER004\yctse], startTime: Optional[2023-11-06T17:04:27.520Z], totalTime: Optional[PT0.015625S]]
+
+
+        }catch (Exception e){
+            System.out.println("Exception : " + e.getMessage());
+        }
 
 //        switch (tmpPos) {
 //            case 1 -> teamCourseSettings.setImage(tmpImage);
