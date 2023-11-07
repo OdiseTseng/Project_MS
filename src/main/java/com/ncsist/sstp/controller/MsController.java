@@ -9,9 +9,12 @@ import com.ncsist.sstp.server.controller.NettyClientMsgController;
 import com.ncsist.sstp.server.service.NettyClientTeamService;
 import com.ncsist.sstp.utils.func.DTOParser;
 import com.ncsist.sstp.utils.text.NettyCode;
+import com.ncsist.sstp.vo.Attendance;
 import com.ncsist.sstp.vo.Course;
 import com.ncsist.sstp.vo.Unit;
 import com.ncsist.sstp.vo.User;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
@@ -25,7 +28,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -44,6 +46,7 @@ public class MsController {
 
     @FXML
     private ImageView teamCourseSettingsSelect;
+
     @FXML
     private ImageView teamCourseSettings;
 
@@ -124,11 +127,32 @@ public class MsController {
     @FXML
     private ImageView tips;
 
+    @FXML
+    private ImageView tabGrade;
+
+    @FXML
+    private ImageView tabGradeBack1;
+
+    @FXML
+    private ImageView tabGradeBack2;
+
+    @FXML
+    private ImageView imgGradeClass;
+
+    @FXML
+    private ImageView imgGradeCourse;
+
 
 
 
     @FXML
     private ListView<Course> courseList;
+
+    @FXML
+    private ListView<User> gradeList;
+
+    @FXML
+    private ListView<Attendance> attendanceList;
 
     @FXML
     private GridPane courseGridPane;
@@ -160,6 +184,19 @@ public class MsController {
     @FXML
     private Pane sentPane;
 
+    @FXML
+    private Pane gradePane;
+
+    @FXML
+    private GridPane gradeYearSelectGridPane;
+
+    @FXML
+    private GridPane gradeClassSelectGridPane;
+
+    @FXML
+    private TableView<Attendance> tableView0;
+
+
     private Image imageBlank;
     private Image imageCourse1;
     private Image imageCourse2;
@@ -186,10 +223,15 @@ public class MsController {
     private Image imageTip2;
     private Image imageTip3;
     private Image imageTip4;
+    private Image imageTip5;
+    private Image imageTip6;
     
     private Image imageBlank1;
     private Image imageBlank2;
     private Image imageTeam4;
+
+    private Image imageGradeBack1;
+    private Image imageGradeBack2;
 
     private boolean teamClicked;
 
@@ -212,7 +254,15 @@ public class MsController {
     private String selectMissionMemberIndex = "";
     private ImageView lastMissionMemberView;
 
+    private String selectGradeClassIndex = "";
+    private ImageView lastGradeClassView;
+
+    private String selectGradeCourseIndex = "";
+    private ImageView lastGradeCourseView;
+
     private int selectMissionRoleIndex = 3;
+
+
 
     List<ImageView> imageViewClasses = null;
     List<ImageView> imageViewCourses = null;
@@ -221,6 +271,8 @@ public class MsController {
 
     List<ImageView> imageViewMissionTeams = null;
     List<ImageView> imageViewMissionMembers = null;
+    List<ImageView> imageViewGradeClasses = null;
+    List<ImageView> imageViewGradeCourses = null;
 
     List<TeamDTO> teamDTOS_ALL = null;
 
@@ -228,6 +280,9 @@ public class MsController {
     List<TeamDTO> teamDTOS2 = null;
 
     Unit[] units = null;
+
+    Attendance[] attendances = null;
+
     ObjectMapper ob = new ObjectMapper();
 
     private String url = "http://localhost:8080" ;
@@ -274,11 +329,15 @@ public class MsController {
         imageTip2 = new Image("/images/ms/team_course/課程設定2使用輔助說明.png");
         imageTip3 = new Image("/images/ms/team_course/課程設定3使用輔助說明.png");
         imageTip4 = new Image("/images/ms/team_course/課程設定4使用輔助說明.png");
+        imageTip5 = new Image("/images/ms/grade/學員成績1使用輔助.png");
 
         imageBlank1 = new Image("/images/ms/team_course/課程設定2新增組別.png");
         imageBlank2 = new Image("/images/ms/team_course/課程設定2新增組別處碰.png");
 
         imageTeam4 = new Image("/images/ms/team_course/課程設定2第四組.png");
+
+        imageGradeBack1 = new Image("/images/ms/grade/學員成績0.png");
+        imageGradeBack2 = new Image("/images/ms/grade/學員成績3.png");
 
         teamSelect1.setVisible(false);
         teamSelect2.setVisible(false);
@@ -329,6 +388,12 @@ public class MsController {
         sentPane.setVisible(false);
 
         tips.setVisible(false);
+
+
+        gradePane.setVisible(false);
+        gradeYearSelectGridPane.setVisible(false);
+        gradeClassSelectGridPane.setVisible(false);
+        tableView0.setVisible(false);
 
         System.out.println("final pane");
         // 初始化程式碼，如果需要的話
@@ -395,6 +460,8 @@ public class MsController {
         missionTeamGridPane.setVisible(showMissonPane);
         missionMemberGridPane.setVisible(showMissonPane);
         missionUnitGridPane.setVisible(showMissonPane);
+
+        gradePane.setVisible(false);
 
 
         teamSelectedGridPane1.getChildren().clear();
@@ -1441,12 +1508,16 @@ public class MsController {
 //        tmpImage = watchCourse.getImage();
 //        watchCourse.setOpacity(1.0);
 //
-//        tmpPos = 2;
+        tmpPos = 1;
     }
 
     @FXML
     private void startTeamCourseAction(MouseEvent event) throws IOException {
         System.out.println("startTeamCourseAction");
+
+
+        gradeYearSelectGridPane.setVisible(false);
+        gradeClassSelectGridPane.setVisible(false);
 
         courseSelect.setVisible(true);
         teamSelect.setVisible(true);
@@ -1457,19 +1528,39 @@ public class MsController {
 
         tips.setVisible(true);
 
-        switch (tmpPos) {
-            case 1 -> {
-                teamCourseSettingsSelect.setOpacity(0.0);
-            }
-            case 2 -> {
-                watchCourse.setImage(tmpImage);
-                watchCourse.setOpacity(0.0);
-            }
-            case 3 -> {
-                helpCourse.setImage(tmpImage);
-                helpCourse.setOpacity(0.0);
-            }
-        }
+        tips.setImage(imageTip1);
+
+        studentGradeSelect.setOpacity(0.0);
+        tabGrade.setVisible(false);
+
+        tableView0.setVisible(false);
+        imgGradeClass.setVisible(false);
+        imgGradeCourse.setVisible(false);
+
+//        switch (tmpPos) {
+//            case 1 ->{
+//
+//            }
+//
+////            case 2 -> {
+////                teamCourseSettingsSelect.setOpacity(0.0);
+////            }
+//
+//            case 3 -> {
+////                watchCourse.setImage(tmpImage);
+//                watchCourse.setOpacity(0.0);
+//            }
+//
+//            case 4 -> {
+////                helpCourse.setImage(tmpImage);
+//                helpCourse.setOpacity(0.0);
+//            }
+//
+//            case 5 -> {
+//                studentGradeSelect.setOpacity(0.0);
+//                tabGrade.setVisible(false);
+//            }
+//        }
 
 //        ImageView clickedView = (ImageView) event.getSource();
 
@@ -1481,7 +1572,7 @@ public class MsController {
 
         teamCourseSettingsSelect.setOpacity(1.0);
 
-        tmpPos = 1;
+        tmpPos = 2;
 
 
         String urlCourse = url + "/user/getAllUserList";
@@ -1598,25 +1689,6 @@ public class MsController {
                     }
                     lastCourseView = sourceView;
 
-                    System.out.println("showTeamPane");
-                    classGridPane.setVisible(false);
-                    courseGridPane.setVisible(false);
-
-                    teamSelect1.setVisible(true);
-                    teamSelect2.setVisible(true);
-                    teamSelect3.setVisible(true);
-                    teamSelect4.setVisible(true);
-
-                    teamSelectPick1.setVisible(true);
-                    teamSelectPick2.setVisible(true);
-                    teamSelectedGridPane1.setVisible(true);
-                    teamSelectedGridPane2.setVisible(true);
-
-                    backImg.setImage(imageCourse2);
-                    tabBack.setImage(imageTab2);
-
-                    tips.setImage(imageTip2);
-
                     teamDTOS_ALL = NettyClientTeamService.getTeamDTOList();
                     System.out.println("teamDTOS_ALL: " + teamDTOS_ALL);
 
@@ -1653,6 +1725,24 @@ public class MsController {
                         teamSelectedGridPane2.add(pane, x, y);
                     }
 
+                    System.out.println("selected showTeamPane");
+                    classGridPane.setVisible(false);
+                    courseGridPane.setVisible(false);
+
+                    teamSelect1.setVisible(true);
+                    teamSelect2.setVisible(true);
+                    teamSelect3.setVisible(true);
+                    teamSelect4.setVisible(true);
+
+                    teamSelectPick1.setVisible(true);
+                    teamSelectPick2.setVisible(true);
+                    teamSelectedGridPane1.setVisible(true);
+                    teamSelectedGridPane2.setVisible(true);
+
+                    backImg.setImage(imageCourse2);
+                    tabBack.setImage(imageTab2);
+
+                    tips.setImage(imageTip2);
 
                 }else{
                     selectCourseIndex = "";
@@ -1711,6 +1801,8 @@ public class MsController {
         classGridPane.setVisible(true);
         courseGridPane.setVisible(true);
 
+
+
     }
 
 
@@ -1751,18 +1843,7 @@ public class MsController {
             System.out.println("Exception : " + e.getMessage());
         }
 
-//        switch (tmpPos) {
-//            case 1 -> teamCourseSettings.setImage(tmpImage);
-//            case 2 -> watchCourse.setImage(tmpImage);
-//            case 3 -> helpCourse.setImage(tmpImage);
-//        }
-//
-//        backImg.setImage(imageBlank);
-//
-//        tmpImage = watchCourse.getImage();
-//        watchCourse.setOpacity(1.0);
-//
-//        tmpPos = 2;
+        tmpPos = 3;
     }
 
     @FXML
@@ -1782,7 +1863,7 @@ public class MsController {
 //        tmpImage = helpCourse.getImage();
 //        helpCourse.setOpacity(1.0);
 //
-//        tmpPos = 3;
+        tmpPos = 4;
     }
 
 
@@ -1791,20 +1872,379 @@ public class MsController {
     private void studentGradeAction(MouseEvent event) throws IOException {
         System.out.println("studentGradeAction");
 
-//        ImageView clickedView = (ImageView) event.getSource();
-//
+        boolean disabledPane = false;
+
+        classGridPane.setVisible(disabledPane);
+        courseGridPane.setVisible(disabledPane);
+
+        teamSelect1.setVisible(disabledPane);
+        teamSelect2.setVisible(disabledPane);
+        teamSelect3.setVisible(disabledPane);
+        teamSelect4.setVisible(disabledPane);
+
+        teamSelectPick1.setVisible(disabledPane);
+        teamSelectPick2.setVisible(disabledPane);
+        teamSelectedGridPane1.setVisible(disabledPane);
+        teamSelectedGridPane2.setVisible(disabledPane);
+
+        missionPane.setVisible(disabledPane);
+        missionTeamGridPane.setVisible(disabledPane);
+        missionMemberGridPane.setVisible(disabledPane);
+        missionUnitGridPane.setVisible(disabledPane);
+
+        courseSelect.setVisible(disabledPane);
+        teamSelect.setVisible(disabledPane);
+        missionSelect.setVisible(disabledPane);
+//        tmpImage = teamCourseSettings.getImage();
+
+        teamCourseSettingsSelect.setOpacity(0.0);
+
+        classGridPane.setVisible(disabledPane);
+        courseGridPane.setVisible(disabledPane);
+
+        tabBack.setVisible(disabledPane);
+
+        imgGradeClass.setVisible(!disabledPane);
+        imgGradeCourse.setVisible(!disabledPane);
+
+        backImg.setImage(imageCourse3);
+        tips.setVisible(!disabledPane);
+        tips.setImage(imageTip5);
+
+        studentGradeSelect.setOpacity(1.0);
+        gradePane.setVisible(!disabledPane);
+        tabGrade.setVisible(!disabledPane);
+
+        gradeYearSelectGridPane.setVisible(!disabledPane);
+        gradeClassSelectGridPane.setVisible(!disabledPane);
+
 //        switch (tmpPos) {
-//            case 1 -> teamCourseSettings.setImage(tmpImage);
-//            case 2 -> watchCourse.setImage(tmpImage);
-//            case 3 -> helpCourse.setImage(tmpImage);
+//            case 1 ->{
+//
+//            }
+//
+//            case 2 -> {
+//                teamCourseSettingsSelect.setOpacity(0.0);
+//                tabBack.setVisible(false);
+//            }
+//
+//            case 3 -> {
+////                watchCourse.setImage(tmpImage);
+//                watchCourse.setOpacity(0.0);
+//            }
+//
+//            case 4 -> {
+////                helpCourse.setImage(tmpImage);
+//                helpCourse.setOpacity(0.0);
+//            }
+//
+////            case 5 -> {
+////                studentGradeSelect.setOpacity(1.0);
+////                tabGrade.setVisible(true);
+////            }
 //        }
+
+
+
+        String urlCourse = url + "/user/getAllUserList";
+        String response = HttpClientGetData.sendGetRequest(urlCourse);
+
+
+        User[] users = ob.readValue(response, User[].class);//array
+        HashSet<Long> classSet = new HashSet<>();
+        for (User user: users){
+            if(user.getStudentBatch() != 0){
+                classSet.add(user.getStudentBatch());
+            }
+        }
+
+
+
+        //test
+//        for(int x = 0; x < 13; x++){
+//            classSet.add(2002013L - x);
+//        }
+
+        ArrayList<Long> sortClassYearList = new ArrayList<>(classSet);
+        sortClassYearList.sort(Collections.reverseOrder());
+
+//        List<Long> sortUserList = Arrays.stream(users).map(User::getStudentBatch).toList();//
+//        System.out.println("sortUserList : "+sortUserList);
+
+        EventHandler gradeClassEventHandler = event1 -> {
+            EventType eventType = event1.getEventType();
+            Pane sourcePane = (Pane) event1.getSource();
+            String currentId = sourcePane.getId();
+            ImageView sourceView = (ImageView) sourcePane.getChildren().get(0);
+//            Label sourceLabel = (Label) sourcePane.getChildren().get(1);
+            if(eventType == MouseEvent.MOUSE_CLICKED){
+                System.out.println("mouse clicked");
+
+                for(ImageView imageView : imageViewGradeClasses){
+                    imageView.setImage(image0);
+                }
+
+                if(!currentId.equals(selectGradeClassIndex)){
+                    selectGradeClassIndex = currentId;
+                    sourceView.setImage(image2);
+                    if(lastGradeClassView != null){
+                        lastGradeClassView.setImage(image0);
+                    }
+                    lastGradeClassView = sourceView;
+                }
+//                else{
+//                    selectGradeClassIndex = "";
+//                    sourceView.setImage(image1);
+//                    lastGradeClassView = null;
+//                }
+
+
+            }else if(eventType == MouseEvent.MOUSE_ENTERED){
+                if(!currentId.equals(selectGradeClassIndex)){
+                    sourceView.setImage(image1);
+                }
+
+            }else if(eventType == MouseEvent.MOUSE_EXITED){
+                if(!currentId.equals(selectGradeClassIndex)) {
+                    sourceView.setImage(image0);
+                }
+
+            }
+        };
+
+
+
+        imageViewGradeClasses = new ArrayList<>();
+
+            for(int y = 0; y < sortClassYearList.size(); y++){
+                Pane pane = new ClassPane(sortClassYearList.get(y)).getPane();
+                pane.setOnMouseClicked(gradeClassEventHandler);
+                pane.setOnMouseEntered(gradeClassEventHandler);
+                pane.setOnMouseExited(gradeClassEventHandler);
+                gradeYearSelectGridPane.add(pane, 0, y);
+
+                ImageView sourceView = (ImageView) pane.getChildren().get(0);
+                imageViewGradeClasses.add(sourceView);
+                if(y == 0){
+                    sourceView.setImage(image2);
+                    selectGradeClassIndex = pane.getId();
+                }
+            }
+
+//        ObservableList<User> data = FXCollections.observableArrayList();
+//        data.addAll(users);
 //
-//        backImg.setImage(imageBlank);
+//        gradeList.setItems(data);
+
+        urlCourse = url + "/course/getAllCourse";
+        response = HttpClientGetData.sendGetRequest(urlCourse);
+
+
+        Course[] gradeCourses = ob.readValue(response, Course[].class);//array
+        List<String> sourseNameList = Arrays.stream(gradeCourses).map(Course::getCourseName).toList();//
+        System.out.println("sourseNameList : "+sourseNameList);
+
+        EventHandler gradeCourseEventHandler = event1 -> {
+            EventType eventType = event1.getEventType();
+            Pane sourcePane = (Pane) event1.getSource();
+            String currentId = sourcePane.getId();
+            ImageView sourceView = (ImageView) sourcePane.getChildren().get(0);
+            if(eventType == MouseEvent.MOUSE_CLICKED){
+                System.out.println("mouse clicked");
+
+                for(ImageView imageView : imageViewGradeCourses){
+                    imageView.setImage(image0);
+                }
+
+                if(!currentId.equals(selectGradeCourseIndex)){
+                    selectGradeCourseIndex = currentId;
+                    sourceView.setImage(image2);
+
+                    if(lastGradeCourseView != null){
+                        lastGradeCourseView.setImage(image0);
+                    }
+                    lastGradeCourseView = sourceView;
+
+//                }else{
+//                    selectGradeCourseIndex = "";
+//                    sourceView.setImage(image0);
+//                    lastGradeCourseView = null;
+                }
+
+
+            }else if(eventType == MouseEvent.MOUSE_ENTERED){
+                if(!currentId.equals(selectGradeCourseIndex)){
+                    sourceView.setImage(image1);
+                }
+
+            }else if(eventType == MouseEvent.MOUSE_EXITED){
+                if(!currentId.equals(selectGradeCourseIndex)) {
+                    sourceView.setImage(image0);
+                }
+
+            }
+        };
+
+        imageViewGradeCourses = new ArrayList<>();
+            for(int y = 0; y < gradeCourses.length; y++){
+                Pane pane = new CoursePane(gradeCourses[y]).getPane();
+                pane.setOnMouseClicked(gradeCourseEventHandler);
+                pane.setOnMouseEntered(gradeCourseEventHandler);
+                pane.setOnMouseExited(gradeCourseEventHandler);
+
+                ImageView sourceView = (ImageView)pane.getChildren().get(0);
+                imageViewGradeCourses.add(sourceView);
+
+//                if(index == 0){
+//                    sourceView.setImage(image2);
+//                    selectGradeCourseIndex = pane.getId();
+//                }
+
+                gradeClassSelectGridPane.add(pane, 0, y);
+            }
+
+        //test
+//        for (int x = 0 ; x < 28; x++){
+//            for(int y = 0; y < 7 && index < 28; y++, index++){
+//                Pane pane = new CoursePane(courses[0]).getPane();
+//                pane.setOnMouseClicked(courseEventHandler);
+//                pane.setOnMouseEntered(courseEventHandler);
+//                pane.setOnMouseExited(courseEventHandler);
 //
-//        tmpImage = helpCourse.getImage();
-//        helpCourse.setOpacity(1.0);
+//                courseGridPane.add(pane, x, y);
+//            }
+//        }
+
+        gradeYearSelectGridPane.setVisible(true);
+        gradeClassSelectGridPane.setVisible(true);
+        tableView0.setVisible(true);
+
+
+
+
+
+        System.out.println("urlAttendance : ");
+        String urlAttendance = url + "/attendance/getAllAttendanceList";
+        System.out.println(urlAttendance);
+        response = HttpClientGetData.sendGetRequest(urlAttendance);
+        System.out.println("response : " + response);
+
+        if(response != null && !response.isEmpty()){
+            attendances = ob.readValue(response, Attendance[].class);//array
+        }
+
+        tableView0.getColumns().clear();
+        if(attendances == null || attendances.length == 0){
+            Attendance attendance = new Attendance();
+            attendance.setRole(1L);
+            attendance.setTeam(1L);
+            attendance.setUsername("學生1");
+            attendance.setContentId(123456789L);
+            attendance.setScore(90L);
+
+            Attendance attendance2 = new Attendance();
+            attendance2.setRole(1L);
+            attendance2.setTeam(2L);
+            attendance2.setUsername("學生2");
+            attendance2.setContentId(123456789L);
+            attendance2.setScore(90L);
+
+            Attendance attendance3 = new Attendance();
+            attendance3.setRole(1L);
+            attendance3.setTeam(3L);
+            attendance3.setUsername("學生3");
+            attendance3.setContentId(123456789L);
+            attendance3.setScore(90L);
+
+            attendances = new Attendance[]{attendance, attendance2, attendance3};
+
+
+            ObservableList<Attendance> attendanceList = FXCollections.observableArrayList(attendances);
+
+            TableColumn<Attendance, Long> teamColumn = new TableColumn<>("小組");
+
+//            teamColumn.setCellValueFactory(cellData -> cellData.getValue().getTeam() );
+            teamColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getTeam()));
+            teamColumn.setPrefWidth(60.0);
+            teamColumn.setMaxWidth(60.0);
+
+            TableColumn<Attendance, Long> numberColumn = new TableColumn<>("學號");
+            numberColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getContentId()));
+            numberColumn.setPrefWidth(80.0);
+            numberColumn.setMaxWidth(80.0);
+
+            TableColumn<Attendance, String> nameColumn = new TableColumn<>("姓名");
+            nameColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getUsername()));
+            nameColumn.setPrefWidth(60.0);
+            nameColumn.setMaxWidth(60.0);
+
+            TableColumn<Attendance, Long> contentColumn = new TableColumn<>("課程內容");
+            contentColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getContentId()));
+            contentColumn.setPrefWidth(185.0);
+            contentColumn.setMaxWidth(185.0);
+
+            TableColumn<Attendance, Long> gradeColumn = new TableColumn<>("成績");
+            gradeColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getScore()));
+            gradeColumn.setPrefWidth(60.0);
+            gradeColumn.setMaxWidth(60.0);
+
+            tableView0.getColumns().addAll(teamColumn, numberColumn, nameColumn, contentColumn, gradeColumn);
+
+
+//            tableView0.setRowFactory();
+
+
+
+            tableView0.setItems(attendanceList);
+
+
+
+//            tableView0.setStyle("-fx-table-header-background: black; -fx-text-fill: white;");
+
+//            tableView0.setRowFactory(tableView -> {
+//                TableRow<Attendance> row = new TableRow<>();
+//                return row;
+//            });
+
+        }
+
+        tmpPos = 5;
+    }
+
+    @FXML
+    private void studentGradeTabAction(MouseEvent event) throws IOException {
+        System.out.println("studentGradeTabAction");
+
+        EventType eventType = event.getEventType();
+        ImageView clickView = (ImageView)event.getSource();
+        String clickId = clickView.getId();
+
+        boolean isVisible = false;
+        if(eventType == MouseEvent.MOUSE_CLICKED){
+            if(clickId.equals("tabGradeBack2")){
+                tabGrade.setImage(imageGradeBack2);
+            }else{
+                tabGrade.setImage(imageGradeBack1);
+
+                isVisible = true;
+
+//                backImg.setImage(imageCourse3);
+//                tips.setVisible(!disabledPane);
+//                tips.setImage(imageTip5);
 //
-//        tmpPos = 3;
+//                studentGradeSelect.setOpacity(1.0);
+//                gradePane.setVisible(!disabledPane);
+//                tabGrade.setVisible(!disabledPane);
+
+            }
+            imgGradeClass.setVisible(isVisible);
+            imgGradeCourse.setVisible(isVisible);
+            gradeYearSelectGridPane.setVisible(isVisible);
+            gradeClassSelectGridPane.setVisible(isVisible);
+            tableView0.setVisible(isVisible);
+
+        }
+
     }
 
 }

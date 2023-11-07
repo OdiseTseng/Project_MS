@@ -20,6 +20,12 @@ public class Attendance implements Serializable{
 	private Long id;
 
 	@Column
+	private String username;
+
+	@Column
+	private Long attendanceId;
+
+	@Column
 	private Long courseId;
 
 	@Column
@@ -30,9 +36,6 @@ public class Attendance implements Serializable{
 
 	@Column
 	private Long quizId;
-
-	@Column
-	private String username;
 
 	@Column
 	private Date attendanceDate;

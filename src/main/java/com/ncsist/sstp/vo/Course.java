@@ -24,7 +24,7 @@ public class Course implements Serializable{
 
 	private String courseName;
 
-	private String courseSchedule;
+	private Long courseSchedule;
 
 	private String courseDesc;
 
