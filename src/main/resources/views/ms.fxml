@@ -279,6 +279,13 @@
                </rowConstraints>
             </GridPane>
             <TableView fx:id="tableView0" layoutX="625.0" layoutY="200.0" prefHeight="500.0" prefWidth="450.0" stylesheets="@../images/ms/tableview.css">
+<!--                <columns>-->
+<!--                    <TableColumn id="team" fx:id="team" maxWidth="60.0" prefWidth="60.0" text="小組" />-->
+<!--                    <TableColumn id="contentId" fx:id="contentId" maxWidth="80.0" prefWidth="80.0" text="學號" />-->
+<!--                    <TableColumn id="username" fx:id="username" maxWidth="60.0" prefWidth="60.0" text="姓名" />-->
+<!--                    <TableColumn id="role" fx:id="role" maxWidth="185.0" text="課程內容" />-->
+<!--                    <TableColumn id="score" fx:id="score" maxWidth="60.0" prefWidth="60.0" text="成績" />-->
+<!--                </columns>-->
             </TableView>
          </children>
       </Pane>

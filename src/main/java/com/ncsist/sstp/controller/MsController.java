@@ -14,8 +14,11 @@ import com.ncsist.sstp.vo.Course;
 import com.ncsist.sstp.vo.Unit;
 import com.ncsist.sstp.vo.User;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -2133,7 +2136,8 @@ public class MsController {
             attendances = ob.readValue(response, Attendance[].class);//array
         }
 
-        tableView0.getColumns().clear();
+//        tableView0.getColumns().clear();
+//        tableView0.setItems(null);
         if(attendances == null || attendances.length == 0){
             Attendance attendance = new Attendance();
             attendance.setRole(1L);
@@ -2167,28 +2171,43 @@ public class MsController {
             teamColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getTeam()));
             teamColumn.setPrefWidth(60.0);
             teamColumn.setMaxWidth(60.0);
+            teamColumn.setStyle("-fx-alignment: CENTER;");
 
             TableColumn<Attendance, Long> numberColumn = new TableColumn<>("學號");
             numberColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getContentId()));
             numberColumn.setPrefWidth(80.0);
             numberColumn.setMaxWidth(80.0);
+            numberColumn.setStyle("-fx-alignment: CENTER;");
 
             TableColumn<Attendance, String> nameColumn = new TableColumn<>("姓名");
             nameColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getUsername()));
             nameColumn.setPrefWidth(60.0);
             nameColumn.setMaxWidth(60.0);
+            nameColumn.setStyle("-fx-alignment: CENTER;");
 
             TableColumn<Attendance, Long> contentColumn = new TableColumn<>("課程內容");
-            contentColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getContentId()));
+            contentColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getRole()));
             contentColumn.setPrefWidth(185.0);
             contentColumn.setMaxWidth(185.0);
+            contentColumn.setStyle("-fx-alignment: CENTER;");
 
             TableColumn<Attendance, Long> gradeColumn = new TableColumn<>("成績");
             gradeColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getScore()));
             gradeColumn.setPrefWidth(60.0);
             gradeColumn.setMaxWidth(60.0);
-
+            gradeColumn.setStyle("-fx-alignment: CENTER;");
+//
+//            tableView0.getColumns().
             tableView0.getColumns().addAll(teamColumn, numberColumn, nameColumn, contentColumn, gradeColumn);
+            System.out.println("tableView0.getColumns() :");
+            for(int x= 0; x< tableView0.getColumns().size(); x++){
+//                tableView0.getColumns().get(x).;
+//                ObservableMap map = tableView0.getColumns().get(x).getProperties();
+//                for (Object key : map.keySet()){
+//                    System.out.println("key : " + key + " ;; map.get(key) : " + map.get(key).toString());
+//                }
+            }
+
 
 
 //            tableView0.setRowFactory();
@@ -2196,6 +2215,30 @@ public class MsController {
 
 
             tableView0.setItems(attendanceList);
+//            tableView0.setStyle("-fx-cell-size: 32px; -fx-border-radius: 10px;");
+//            tableView0.lookup(".column-header").setStyle("-fx-background-radius: 5px 5px 0 0;");
+//            tableView0.setStyle("-fx-background-radius: 5px 5px 0 0;");
+            
+//            EventHandler tableEventType = event1 -> {
+//                EventType eventType = event1.getEventType();
+////                event1.getSource();
+//                System.out.println("event1.getSource() : " + event1.getSource());
+//
+//            };
+//
+//            tableView0.setOnMouseClicked(tableEventType);
+
+            tableView0.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Attendance>() {
+                @Override
+                public void changed(ObservableValue<? extends Attendance> observableValue, Attendance oldAttendance, Attendance newAttendance) {
+                    System.out.println("oldAttendance : " + oldAttendance);
+                    if(newAttendance != null){
+                        System.out.println("newAttendance : " + newAttendance);
+                    }
+                }
+            });
+
+            tableView0.setStyle("-fx-font-size: 14px; -fx-font-family: TaipeiSansTCBeta-Bold;");
 
 
 
