@@ -4,12 +4,12 @@
     -fx-background-color: black;
 }
 
-.table-view .column-header {
-	-fx-background-radius: 5px 5px 0 0;
-}
 
 .table-view .column-header .label {
     -fx-text-fill: white;
     -fx-font-weight: bold;
 	-fx-font-size: 16px;
 }
+
+
+

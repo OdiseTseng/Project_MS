@@ -9,16 +9,10 @@ import com.ncsist.sstp.server.controller.NettyClientMsgController;
 import com.ncsist.sstp.server.service.NettyClientTeamService;
 import com.ncsist.sstp.utils.func.DTOParser;
 import com.ncsist.sstp.utils.text.NettyCode;
-import com.ncsist.sstp.vo.Attendance;
-import com.ncsist.sstp.vo.Course;
-import com.ncsist.sstp.vo.Unit;
-import com.ncsist.sstp.vo.User;
+import com.ncsist.sstp.vo.*;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -197,7 +191,11 @@ public class MsController {
     private GridPane gradeClassSelectGridPane;
 
     @FXML
-    private TableView<Attendance> tableView0;
+    private TableView<Grade> tableView0;
+//    private TableView<Attendance> tableView0;
+
+    @FXML
+    private TableView<Grade> tableViewAll;
 
 
     private Image imageBlank;
@@ -281,6 +279,13 @@ public class MsController {
 
     List<TeamDTO> teamDTOS1 = null;
     List<TeamDTO> teamDTOS2 = null;
+
+
+    Course[] gradeCourses = null;
+
+    User[] gradeUsers = null;
+    
+    Unit[] gradeUnits = null;
 
     Unit[] units = null;
 
@@ -397,6 +402,7 @@ public class MsController {
         gradeYearSelectGridPane.setVisible(false);
         gradeClassSelectGridPane.setVisible(false);
         tableView0.setVisible(false);
+        tableViewAll.setVisible(false);
 
         System.out.println("final pane");
         // 初始化程式碼，如果需要的話
@@ -1875,6 +1881,9 @@ public class MsController {
     private void studentGradeAction(MouseEvent event) throws IOException {
         System.out.println("studentGradeAction");
 
+        tableView0.getColumns().clear();
+        tableViewAll.getColumns().clear();
+
         boolean disabledPane = false;
 
         classGridPane.setVisible(disabledPane);
@@ -1953,9 +1962,9 @@ public class MsController {
         String response = HttpClientGetData.sendGetRequest(urlCourse);
 
 
-        User[] users = ob.readValue(response, User[].class);//array
+        gradeUsers = ob.readValue(response, User[].class);//array
         HashSet<Long> classSet = new HashSet<>();
-        for (User user: users){
+        for (User user: gradeUsers){
             if(user.getStudentBatch() != 0){
                 classSet.add(user.getStudentBatch());
             }
@@ -1989,12 +1998,12 @@ public class MsController {
 
                 if(!currentId.equals(selectGradeClassIndex)){
                     selectGradeClassIndex = currentId;
-                    sourceView.setImage(image2);
                     if(lastGradeClassView != null){
                         lastGradeClassView.setImage(image0);
                     }
                     lastGradeClassView = sourceView;
                 }
+                sourceView.setImage(image2);
 //                else{
 //                    selectGradeClassIndex = "";
 //                    sourceView.setImage(image1);
@@ -2043,7 +2052,7 @@ public class MsController {
         response = HttpClientGetData.sendGetRequest(urlCourse);
 
 
-        Course[] gradeCourses = ob.readValue(response, Course[].class);//array
+        gradeCourses = ob.readValue(response, Course[].class);//array
         List<String> sourseNameList = Arrays.stream(gradeCourses).map(Course::getCourseName).toList();//
         System.out.println("sourseNameList : "+sourseNameList);
 
@@ -2061,7 +2070,6 @@ public class MsController {
 
                 if(!currentId.equals(selectGradeCourseIndex)){
                     selectGradeCourseIndex = currentId;
-                    sourceView.setImage(image2);
 
                     if(lastGradeCourseView != null){
                         lastGradeCourseView.setImage(image0);
@@ -2073,6 +2081,59 @@ public class MsController {
 //                    sourceView.setImage(image0);
 //                    lastGradeCourseView = null;
                 }
+                sourceView.setImage(image2);
+
+//                List<Attendance> findAttendanceList = new ArrayList<>();
+                List<Grade> findGradeList = new ArrayList<>();
+                System.out.println("currentId : " + currentId);
+                for(int x = 0; x < attendances.length; x++){
+                    Attendance attendance = attendances[x];
+                    System.out.println("attendance.getCourseId() : " + attendance.getCourseId());
+                    System.out.println("attendance : " + attendance);
+                    if(attendance.getCourseId() == Long.parseLong(currentId)){
+                        Grade grade = new Grade();
+                        grade.setCourseId(attendance.getCourseId());
+                        grade.setAttendanceId(attendance.getAttendanceId());
+                        grade.setTeam(attendance.getTeam());
+                        grade.setScore(attendance.getScore());
+
+                        Long studentId = 0L;
+                        String userName = "";
+                        String name = "";
+                        for(int y = 0; y < gradeUsers.length; y++){
+                            User user = gradeUsers[y];
+                            if(user.getUsername().equals(attendance.getUsername())){
+                                studentId = user.getStudentId();
+                                userName = user.getUsername();
+                                name = user.getName();
+                                break;
+                            }
+                        }
+                        grade.setStudentId(studentId);
+                        grade.setUsername(userName);
+                        grade.setName(name);
+
+                        String unitName = "";
+                        for (Unit unit : gradeUnits) {
+                            System.out.println("unit : " + unit);
+                            if (Objects.equals(attendance.getUnitId(), unit.getUnitId()) && Objects.equals(attendance.getCourseId(), unit.getCourseId())) {
+                                unitName = unit.getUnitName();
+                                break;
+                            }
+                        }
+
+                        grade.setUnitName(unitName);
+                        findGradeList.add(grade);
+                    }
+                }
+
+//                findAttendances = (Attendance[]) Arrays.asList(attendanceList).toArray();
+//                ObservableList<Attendance> newAttendanceList = FXCollections.observableArrayList(findAttendanceList);
+                ObservableList<Grade> newGradeList = FXCollections.observableArrayList(findGradeList);
+
+//                ObservableList<Attendance> newAttendanceList = FXCollections.observableArrayList(findAttendances);
+//                tableView0.setItems(newAttendanceList);
+                tableView0.setItems(newGradeList);
 
 
             }else if(eventType == MouseEvent.MOUSE_ENTERED){
@@ -2089,22 +2150,22 @@ public class MsController {
         };
 
         imageViewGradeCourses = new ArrayList<>();
-            for(int y = 0; y < gradeCourses.length; y++){
-                Pane pane = new CoursePane(gradeCourses[y]).getPane();
-                pane.setOnMouseClicked(gradeCourseEventHandler);
-                pane.setOnMouseEntered(gradeCourseEventHandler);
-                pane.setOnMouseExited(gradeCourseEventHandler);
+        for(int y = 0; y < gradeCourses.length; y++){
+            Pane pane = new CoursePane(gradeCourses[y]).getPane();
+            pane.setOnMouseClicked(gradeCourseEventHandler);
+            pane.setOnMouseEntered(gradeCourseEventHandler);
+            pane.setOnMouseExited(gradeCourseEventHandler);
 
-                ImageView sourceView = (ImageView)pane.getChildren().get(0);
-                imageViewGradeCourses.add(sourceView);
+            ImageView sourceView = (ImageView)pane.getChildren().get(0);
+            imageViewGradeCourses.add(sourceView);
 
 //                if(index == 0){
 //                    sourceView.setImage(image2);
 //                    selectGradeCourseIndex = pane.getId();
 //                }
 
-                gradeClassSelectGridPane.add(pane, 0, y);
-            }
+            gradeClassSelectGridPane.add(pane, 0, y);
+        }
 
         //test
 //        for (int x = 0 ; x < 28; x++){
@@ -2136,8 +2197,6 @@ public class MsController {
             attendances = ob.readValue(response, Attendance[].class);//array
         }
 
-//        tableView0.getColumns().clear();
-//        tableView0.setItems(null);
         if(attendances == null || attendances.length == 0){
             Attendance attendance = new Attendance();
             attendance.setRole(1L);
@@ -2162,94 +2221,143 @@ public class MsController {
 
             attendances = new Attendance[]{attendance, attendance2, attendance3};
 
-
-            ObservableList<Attendance> attendanceList = FXCollections.observableArrayList(attendances);
-
-            TableColumn<Attendance, Long> teamColumn = new TableColumn<>("小組");
-
-//            teamColumn.setCellValueFactory(cellData -> cellData.getValue().getTeam() );
-            teamColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getTeam()));
-            teamColumn.setPrefWidth(60.0);
-            teamColumn.setMaxWidth(60.0);
-            teamColumn.setStyle("-fx-alignment: CENTER;");
-
-            TableColumn<Attendance, Long> numberColumn = new TableColumn<>("學號");
-            numberColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getContentId()));
-            numberColumn.setPrefWidth(80.0);
-            numberColumn.setMaxWidth(80.0);
-            numberColumn.setStyle("-fx-alignment: CENTER;");
-
-            TableColumn<Attendance, String> nameColumn = new TableColumn<>("姓名");
-            nameColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getUsername()));
-            nameColumn.setPrefWidth(60.0);
-            nameColumn.setMaxWidth(60.0);
-            nameColumn.setStyle("-fx-alignment: CENTER;");
-
-            TableColumn<Attendance, Long> contentColumn = new TableColumn<>("課程內容");
-            contentColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getRole()));
-            contentColumn.setPrefWidth(185.0);
-            contentColumn.setMaxWidth(185.0);
-            contentColumn.setStyle("-fx-alignment: CENTER;");
-
-            TableColumn<Attendance, Long> gradeColumn = new TableColumn<>("成績");
-            gradeColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getScore()));
-            gradeColumn.setPrefWidth(60.0);
-            gradeColumn.setMaxWidth(60.0);
-            gradeColumn.setStyle("-fx-alignment: CENTER;");
-//
-//            tableView0.getColumns().
-            tableView0.getColumns().addAll(teamColumn, numberColumn, nameColumn, contentColumn, gradeColumn);
-            System.out.println("tableView0.getColumns() :");
-            for(int x= 0; x< tableView0.getColumns().size(); x++){
-//                tableView0.getColumns().get(x).;
-//                ObservableMap map = tableView0.getColumns().get(x).getProperties();
-//                for (Object key : map.keySet()){
-//                    System.out.println("key : " + key + " ;; map.get(key) : " + map.get(key).toString());
-//                }
-            }
-
-
-
-//            tableView0.setRowFactory();
-
-
-
-            tableView0.setItems(attendanceList);
-//            tableView0.setStyle("-fx-cell-size: 32px; -fx-border-radius: 10px;");
-//            tableView0.lookup(".column-header").setStyle("-fx-background-radius: 5px 5px 0 0;");
-//            tableView0.setStyle("-fx-background-radius: 5px 5px 0 0;");
-            
-//            EventHandler tableEventType = event1 -> {
-//                EventType eventType = event1.getEventType();
-////                event1.getSource();
-//                System.out.println("event1.getSource() : " + event1.getSource());
-//
-//            };
-//
-//            tableView0.setOnMouseClicked(tableEventType);
-
-            tableView0.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Attendance>() {
-                @Override
-                public void changed(ObservableValue<? extends Attendance> observableValue, Attendance oldAttendance, Attendance newAttendance) {
-                    System.out.println("oldAttendance : " + oldAttendance);
-                    if(newAttendance != null){
-                        System.out.println("newAttendance : " + newAttendance);
-                    }
-                }
-            });
-
-            tableView0.setStyle("-fx-font-size: 14px; -fx-font-family: TaipeiSansTCBeta-Bold;");
-
-
-
-//            tableView0.setStyle("-fx-table-header-background: black; -fx-text-fill: white;");
-
-//            tableView0.setRowFactory(tableView -> {
-//                TableRow<Attendance> row = new TableRow<>();
-//                return row;
-//            });
-
         }
+
+        String urlUnit = url + "/unit/getAllUnit";
+        response = HttpClientGetData.sendGetRequest(urlUnit);
+
+        gradeUnits = ob.readValue(response, Unit[].class);//array
+
+//        TableColumn<Attendance, Long> teamColumn = new TableColumn<>("小組");
+        TableColumn<Grade, Long> teamColumn = new TableColumn<>("小組");
+        teamColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getTeam()));
+        teamColumn.setPrefWidth(60.0);
+        teamColumn.setMinWidth(60.0);
+        teamColumn.setMaxWidth(60.0);
+        teamColumn.setStyle("-fx-alignment: CENTER; -fx-background-radius: 10px 0 0 0;"); // 左上倒角
+
+//        TableColumn<Attendance, Long> numberColumn = new TableColumn<>("學號");
+//        numberColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getContentId()));
+        TableColumn<Grade, Long> numberColumn = new TableColumn<>("學號");
+        numberColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getStudentId()));
+        numberColumn.setPrefWidth(80.0);
+        numberColumn.setMinWidth(80.0);
+        numberColumn.setMaxWidth(80.0);
+        numberColumn.setStyle("-fx-alignment: CENTER;");
+
+//        TableColumn<Attendance, String> nameColumn = new TableColumn<>("姓名");
+        TableColumn<Grade, String> nameColumn = new TableColumn<>("姓名");
+        nameColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getName()));
+        nameColumn.setPrefWidth(80.0);
+        nameColumn.setMinWidth(80.0);
+        nameColumn.setMaxWidth(80.0);
+        nameColumn.setStyle("-fx-alignment: CENTER;");
+
+//        TableColumn<Attendance, Long> contentColumn = new TableColumn<>("課程內容");
+//        contentColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getRole()));
+        TableColumn<Grade, String> contentColumn = new TableColumn<>("單元名稱");
+        contentColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getUnitName()));
+        contentColumn.setPrefWidth(168.0);
+        contentColumn.setMinWidth(168.0);
+        contentColumn.setMaxWidth(168.0);
+        contentColumn.setStyle("-fx-alignment: CENTER;");
+
+//        TableColumn<Attendance, Long> gradeColumn = new TableColumn<>("成績");
+        TableColumn<Grade, Long> gradeColumn = new TableColumn<>("成績");
+        gradeColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getScore()));
+        gradeColumn.setPrefWidth(60.0);
+        gradeColumn.setMinWidth(60.0);
+        gradeColumn.setMaxWidth(60.0);
+        gradeColumn.setStyle("-fx-alignment: CENTER; -fx-background-radius: 0 10px 0 0;");   //右上倒角
+
+        tableView0.getColumns().addAll(teamColumn, numberColumn, nameColumn, contentColumn, gradeColumn);
+
+//        tableView0.getSelectionModel().selectedItemProperty().addListener((observableValue, oldAttendance, newAttendance) -> {
+//            System.out.println("oldAttendance : " + oldAttendance);
+//            if(newAttendance != null){
+//                System.out.println("newAttendance : " + newAttendance);
+//            }
+//        });
+
+        tableView0.getSelectionModel().selectedItemProperty().addListener((observableValue, oldGrade, newGrade) -> {
+            System.out.println("oldAttendance : " + oldGrade);
+            if(newGrade != null){
+                System.out.println("newAttendance : " + newGrade);
+            }
+        });
+
+        tableView0.setFixedCellSize(30);
+
+        tableView0.setStyle("-fx-font-size: 14px; -fx-font-family: TaipeiSansTCBeta-Bold; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-selection-bar-non-focused: black;");
+
+
+        TableColumn<Grade, Long> classColumn = new TableColumn<>("班級");
+        teamColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getStudentBatch()));
+        teamColumn.setPrefWidth(60.0);
+        teamColumn.setMinWidth(60.0);
+        teamColumn.setMaxWidth(60.0);
+        teamColumn.setStyle("-fx-alignment: CENTER; -fx-background-radius: 10px 0 0 0;"); // 左上倒角
+
+        TableColumn<Grade, String> courseColumn = new TableColumn<>("課程名稱");
+        courseColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCourseName()));
+        courseColumn.setPrefWidth(130.0);
+        courseColumn.setMinWidth(130.0);
+        courseColumn.setMaxWidth(130.0);
+        courseColumn.setStyle("-fx-alignment: CENTER;");
+
+        teamColumn = new TableColumn<>("隊伍");
+        teamColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getTeam()));
+        teamColumn.setPrefWidth(80.0);
+        teamColumn.setMinWidth(80.0);
+        teamColumn.setMaxWidth(80.0);
+        teamColumn.setStyle("-fx-alignment: CENTER;");
+
+        numberColumn = new TableColumn<>("學號");
+        numberColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getStudentId()));
+        numberColumn.setPrefWidth(80.0);
+        numberColumn.setMinWidth(80.0);
+        numberColumn.setMaxWidth(80.0);
+        numberColumn.setStyle("-fx-alignment: CENTER;");
+
+//        TableColumn<Attendance, String> nameColumn = new TableColumn<>("姓名");
+        nameColumn = new TableColumn<>("姓名");
+        nameColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getName()));
+        nameColumn.setPrefWidth(100.0);
+        nameColumn.setMinWidth(100.0);
+        nameColumn.setMaxWidth(100.0);
+        nameColumn.setStyle("-fx-alignment: CENTER;");
+
+//        TableColumn<Attendance, Long> contentColumn = new TableColumn<>("課程內容");
+//        contentColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getRole()));
+        contentColumn = new TableColumn<>("單元名稱");
+        contentColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getUnitName()));
+        contentColumn.setPrefWidth(217.0);
+        contentColumn.setMinWidth(217.0);
+        contentColumn.setMaxWidth(217.0);
+        contentColumn.setStyle("-fx-alignment: CENTER;");
+
+        gradeColumn = new TableColumn<>("成績");
+        gradeColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getScore()));
+        gradeColumn.setPrefWidth(60.0);
+        gradeColumn.setMinWidth(60.0);
+        gradeColumn.setMaxWidth(60.0);
+        gradeColumn.setStyle("-fx-alignment: CENTER; -fx-background-radius: 0 10px 0 0;");   //右上倒角
+
+        tableViewAll.getColumns().addAll(classColumn, courseColumn, teamColumn, numberColumn, nameColumn, contentColumn, gradeColumn);
+
+
+
+        tableViewAll.getSelectionModel().selectedItemProperty().addListener((observableValue, oldGrade, newGrade) -> {
+            System.out.println("oldAttendance : " + oldGrade);
+            if(newGrade != null){
+                System.out.println("newAttendance : " + newGrade);
+            }
+        });
+
+        tableViewAll.setFixedCellSize(30);
+
+        tableViewAll.setStyle("-fx-font-size: 14px; -fx-font-family: TaipeiSansTCBeta-Bold; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-selection-bar-non-focused: black;");
+        //-fx-selection-bar: black; -fx-selection-bar-non-focused: black; -fx-border-width: 2px;
 
         tmpPos = 5;
     }
@@ -2266,6 +2374,66 @@ public class MsController {
         if(eventType == MouseEvent.MOUSE_CLICKED){
             if(clickId.equals("tabGradeBack2")){
                 tabGrade.setImage(imageGradeBack2);
+
+                tableViewAll.setItems(null);
+
+                List<Grade> findGradeList = new ArrayList<>();
+                for(int x = 0; x < attendances.length; x++){
+                    Attendance attendance = attendances[x];
+                    System.out.println("attendance.getCourseId() : " + attendance.getCourseId());
+
+
+                    Grade grade = new Grade();
+                    grade.setCourseId(attendance.getCourseId());
+
+                    String courseName = "";
+                    for(int y = 0; y < gradeCourses.length; y++){
+                        Course course = gradeCourses[y];
+                        if(course.getCourseId() == attendance.getCourseId()){
+                            courseName = course.getCourseName();
+                        }
+                    }
+                    grade.setCourseName(courseName);
+
+                    grade.setAttendanceId(attendance.getAttendanceId());
+                    grade.setTeam(attendance.getTeam());
+                    grade.setScore(attendance.getScore());
+
+                    Long studentId = 0L;
+                    Long studentBatch = 0L;
+                    for(int y = 0; y < gradeUsers.length; y++){
+                        User user = gradeUsers[y];
+                        if(user.getUsername().equals(attendance.getUsername())){
+                            studentId = user.getStudentId();
+                            studentBatch = user.getStudentBatch();
+                        }
+                    }
+                    grade.setStudentId(studentId);
+                    grade.setStudentBatch(studentBatch);
+
+                    String unitName = "";
+                    for(int y = 0; y < gradeUnits.length; y++){
+                        Unit unit = gradeUnits[y];
+
+                        if(attendance.getUnitId() == unit.getUnitId()){
+                            unitName = unit.getUnitName();
+                        }
+                    }
+
+                    grade.setUnitName(unitName);
+
+                    findGradeList.add(grade);
+                }
+
+
+//                findAttendances = (Attendance[]) Arrays.asList(attendanceList).toArray();
+//                ObservableList<Attendance> newAttendanceList = FXCollections.observableArrayList(findAttendanceList);
+                ObservableList<Grade> newGradeList = FXCollections.observableArrayList(findGradeList);
+
+//                ObservableList<Attendance> newAttendanceList = FXCollections.observableArrayList(findAttendances);
+//                tableView0.setItems(newAttendanceList);
+                tableViewAll.setItems(newGradeList);
+
             }else{
                 tabGrade.setImage(imageGradeBack1);
 
@@ -2285,6 +2453,7 @@ public class MsController {
             gradeYearSelectGridPane.setVisible(isVisible);
             gradeClassSelectGridPane.setVisible(isVisible);
             tableView0.setVisible(isVisible);
+            tableViewAll.setVisible(!isVisible);
 
         }
 

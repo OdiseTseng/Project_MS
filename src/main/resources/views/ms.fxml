@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
@@ -287,6 +286,7 @@
 <!--                    <TableColumn id="score" fx:id="score" maxWidth="60.0" prefWidth="60.0" text="成績" />-->
 <!--                </columns>-->
             </TableView>
+            <TableView fx:id="tableViewAll" layoutX="330.0" layoutY="200.0" prefHeight="500.0" prefWidth="750.0" stylesheets="@../images/ms/tableview.css" />
          </children>
       </Pane>
       <ImageView fx:id="systemDescSelect" fitHeight="140.0" fitWidth="300.0" layoutX="33.0" layoutY="246.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
