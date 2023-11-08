@@ -286,7 +286,23 @@
 <!--                    <TableColumn id="score" fx:id="score" maxWidth="60.0" prefWidth="60.0" text="成績" />-->
 <!--                </columns>-->
             </TableView>
+            <TableView fx:id="tableViewDetail" layoutX="625.0" layoutY="200.0" prefHeight="430.0" prefWidth="450.0" stylesheets="@../images/ms/tableview.css" />
             <TableView fx:id="tableViewAll" layoutX="330.0" layoutY="200.0" prefHeight="500.0" prefWidth="750.0" stylesheets="@../images/ms/tableview.css" />
+            <ImageView fx:id="imgGradeBack" fitHeight="50.0" fitWidth="125.0" layoutX="625.0" layoutY="640.0" onMouseClicked="#imgGradeBackAction" onMouseEntered="#imgGradeBackAction" onMouseExited="#imgGradeBackAction" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/ms/grade/學員成績2返回.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgGradeExport" fitHeight="50.0" fitWidth="125.0" layoutX="975.0" layoutY="640.0" onMouseClicked="#imgGradeBackAction" onMouseEntered="#imgGradeBackAction" onMouseExited="#imgGradeBackAction" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/ms/grade/匯出預設.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgGradePrint" fitHeight="50.0" fitWidth="125.0" layoutX="1025.0" layoutY="640.0" onMouseClicked="#imgGradeBackAction" onMouseEntered="#imgGradeBackAction" onMouseExited="#imgGradeBackAction" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/ms/grade/列印預設.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
       <ImageView fx:id="systemDescSelect" fitHeight="140.0" fitWidth="300.0" layoutX="33.0" layoutY="246.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
