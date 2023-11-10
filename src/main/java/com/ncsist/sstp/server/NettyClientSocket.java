@@ -8,6 +8,9 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
+
+import java.util.concurrent.TimeUnit;
 //import org.simulation.service.session.SessionUser;
 //import org.simulation.util.func.CommonFunction;
 //import org.simulation.util.log.LogDataHelper;
@@ -41,6 +44,7 @@ public class NettyClientSocket {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             //add client channel processor
                             ch.pipeline().addLast(new NettyClientHandler());
+                            ch.pipeline().addLast("idleStatehandler", new IdleStateHandler(0, 4, 0, TimeUnit.SECONDS));
                         }
                     });
 //            LogDataHelper.writeLog(CommonFunction.getCurrentFunctionName(), "Client ready");

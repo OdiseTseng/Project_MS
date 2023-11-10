@@ -293,12 +293,12 @@
                   <Image url="@../images/ms/grade/學員成績2返回.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="imgGradeExport" fitHeight="50.0" fitWidth="125.0" layoutX="975.0" layoutY="640.0" onMouseClicked="#imgGradeBackAction" onMouseEntered="#imgGradeBackAction" onMouseExited="#imgGradeBackAction" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgGradeExport" fitHeight="50.0" fitWidth="125.0" layoutX="975.0" layoutY="640.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/ms/grade/匯出預設.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="imgGradePrint" fitHeight="50.0" fitWidth="125.0" layoutX="1025.0" layoutY="640.0" onMouseClicked="#imgGradeBackAction" onMouseEntered="#imgGradeBackAction" onMouseExited="#imgGradeBackAction" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgGradePrint" fitHeight="50.0" fitWidth="125.0" layoutX="1025.0" layoutY="640.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/ms/grade/列印預設.png" />
                </image>

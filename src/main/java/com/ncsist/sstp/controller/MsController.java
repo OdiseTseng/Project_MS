@@ -1547,6 +1547,11 @@ public class MsController {
         System.out.println("startTeamCourseAction");
 
 
+        tableViewDetail.setVisible(false);
+        imgGradeBack.setVisible(false);
+        imgGradeExport.setVisible(false);
+        imgGradePrint.setVisible(false);
+
         gradeYearSelectGridPane.setVisible(false);
         gradeClassSelectGridPane.setVisible(false);
 
@@ -1564,9 +1569,36 @@ public class MsController {
         studentGradeSelect.setOpacity(0.0);
         tabGrade.setVisible(false);
 
+        tabBack.setImage(imageTab1);
+
+        gradePane.setVisible(false);
         tableView0.setVisible(false);
         imgGradeClass.setVisible(false);
         imgGradeCourse.setVisible(false);
+
+        classGridPane.setVisible(true);
+        courseGridPane.setVisible(true);
+
+        teamSelect1.setVisible(false);
+        teamSelect2.setVisible(false);
+        teamSelect3.setVisible(false);
+        teamSelect4.setVisible(false);
+
+        teamSelectPick1.setVisible(false);
+        teamSelectPick2.setVisible(false);
+        teamSelectedGridPane1.setVisible(false);
+        teamSelectedGridPane2.setVisible(false);
+
+        missionPane.setVisible(false);
+        missionTeamGridPane.setVisible(false);
+        missionMemberGridPane.setVisible(false);
+        missionUnitGridPane.setVisible(false);
+
+        gradePane.setVisible(false);
+
+
+        teamSelectedGridPane1.getChildren().clear();
+        teamSelectedGridPane2.getChildren().clear();
 
 //        switch (tmpPos) {
 //            case 1 ->{
@@ -2254,8 +2286,11 @@ public class MsController {
 
         }
 
+        System.out.println("urlUnit : ");
         String urlUnit = url + "/unit/getAllUnit";
+        System.out.println(urlUnit);
         response = HttpClientGetData.sendGetRequest(urlUnit);
+        System.out.println("response : " + response);
 
         gradeUnits = ob.readValue(response, Unit[].class);//array
 
@@ -2568,6 +2603,9 @@ public class MsController {
 
                 tableViewAll.setItems(newGradeList);
 
+
+                tableViewDetail.setVisible(false);
+
             }else{
                 tabGrade.setImage(imageGradeBack1);
 
@@ -2580,10 +2618,10 @@ public class MsController {
             gradeClassSelectGridPane.setVisible(isVisible);
             tableView0.setVisible(isVisible);
             tableViewAll.setVisible(!isVisible);
-            imgGradeBack.setVisible(!isVisible);
             tableViewDetail.setVisible(!isVisible);
-            imgGradeExport.setVisible(!isVisible);
-            imgGradePrint.setVisible(!isVisible);
+            imgGradeBack.setVisible(false);
+            imgGradeExport.setVisible(false);
+            imgGradePrint.setVisible(false);
 
         }
 
