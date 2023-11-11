@@ -2,7 +2,10 @@ package com.ncsist.sstp.server.handler;
 
 import com.ncsist.sstp.server.controller.NettyClientMsgController;
 import com.ncsist.sstp.model.MsgDTO;
+import com.ncsist.sstp.utils.func.DTOParser;
+import com.ncsist.sstp.utils.text.NettyCode;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
@@ -120,7 +123,17 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		System.out.println("userEventTriggered : " + ctx.channel().remoteAddress().toString());
-//		super.userEventTriggered(ctx, evt);
+
+		if(evt instanceof IdleStateEvent) {
+			IdleStateEvent event = (IdleStateEvent) evt;
+			if(IdleState.WRITER_IDLE.equals(event.state())) {
+				MsgDTO msgDTO = new MsgDTO();
+				msgDTO.setCmd(NettyCode.CMD_KEEP_ALIVE);
+				String msgString = DTOParser.parseDTOToString(msgDTO);
+				ctx.writeAndFlush(msgString).addListener(ChannelFutureListener.CLOSE_ON_FAILURE) ;
+			}
+		}
+		super.userEventTriggered(ctx, evt);
 
 	}
 
