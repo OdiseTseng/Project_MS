@@ -189,6 +189,9 @@ public class MsController {
 
     @FXML
     private Pane sentPane;
+    
+    @FXML
+    private Pane watchPane;
 
     @FXML
     private Pane gradePane;
@@ -403,6 +406,8 @@ public class MsController {
 
         missionLabelContent.setFont(Main.customFont);
         taMission.setFont(Main.customFont);
+
+        watchPane.setVisible(false);
 
         missionIsLeader.setImage(imageTeamLeader1);
         missionLabelTeam.setFont(Main.customFont);
@@ -1482,7 +1487,7 @@ public class MsController {
         ImageView imageView = (ImageView)event.getSource();
 
         if(eventType == MouseEvent.MOUSE_ENTERED){
-            imageView.setImage(imageMission1);
+            imageView.setImage(imageMission2);
         }else if(eventType == MouseEvent.MOUSE_CLICKED){
             imageView.setImage(imageMission3);
 
@@ -1505,6 +1510,12 @@ public class MsController {
 
                 sentPane.setVisible(false);
 
+//                watchCourse.setVisible(true);
+
+                watchPane.setVisible(true);
+                watchCourseSelect.setOpacity(1.0);
+                teamCourseSettingsSelect.setOpacity(0.0);
+
             });
 
             // 啟動任務
@@ -1524,7 +1535,7 @@ public class MsController {
 
     @FXML
     private void onSystemDescAction(MouseEvent event) throws IOException {
-        System.out.println("watchCourseAction");
+        System.out.println("onSystemDescAction");
 
 //        ImageView clickedView = (ImageView) event.getSource();
 
@@ -1594,6 +1605,7 @@ public class MsController {
         missionMemberGridPane.setVisible(false);
         missionUnitGridPane.setVisible(false);
 
+        watchPane.setVisible(false);
         gradePane.setVisible(false);
 
 
@@ -1634,6 +1646,7 @@ public class MsController {
         backImg.setImage(imageCourse1);
 
         teamCourseSettingsSelect.setOpacity(1.0);
+        watchCourseSelect.setOpacity(0.0);
 
         tmpPos = 2;
 
@@ -1868,16 +1881,24 @@ public class MsController {
 
     }
 
-
-
     @FXML
-    private void watchCourseAction(MouseEvent event) throws IOException {
-        System.out.println("watchCourseAction");
+    private void onWatchCourseAction(MouseEvent event) throws IOException{
+        System.out.println("onWatchCourseAction");
+
+        EventType mouseEvent = (EventType)event.getEventType();
+        ImageView imageView = (ImageView)event.getSource();
+
+        if(mouseEvent.equals(MouseEvent.MOUSE_ENTERED)){
+            imageView.setImage(image2);
+
+
+        }else if(mouseEvent.equals(MouseEvent.MOUSE_CLICKED)){
+            imageView.setImage(image1);
 
 //        String cmd = "iNetConsole.exe";
 //        String cmd = "\"C:\\Program Files (x86)\\SanFong\\EZ-WinMate Teacher\\iNetConsole.exe\"";
-        String cmd = "\"C:\\work\\start-WinMate.cmd\"";
-        ProcessBuilder processBuilder = new ProcessBuilder(cmd);
+            String cmd = "\"C:\\work\\start-WinMate.cmd\"";
+            ProcessBuilder processBuilder = new ProcessBuilder(cmd);
 //        ProcessBuilder processBuilder = new ProcessBuilder("runas", "/user:yctse", cmd);
 
 //        String[]  startAsAdmin= new String [] {
@@ -1889,22 +1910,92 @@ public class MsController {
 //
 //        Process runtimeProcess = Runtime.getRuntime().exec(startAsAdmin);
 
-        try {
-            Process process = processBuilder.start();
+            try {
+                Process process = processBuilder.start();
 
 //            int exitCode = runtimeProcess.waitFor();
-            boolean exitCode = process.waitFor(3000, TimeUnit.SECONDS);
-            System.out.println("Exit code: " + exitCode);
-            //1
+                boolean exitCode = process.waitFor(3000, TimeUnit.SECONDS);
+                System.out.println("Exit code: " + exitCode);
+                //1
 
-            System.out.println("Info: " + process.toString());
-            System.out.println("Info: " + process.info().toString());
-            //Info: [user: Optional[USER004\yctse], startTime: Optional[2023-11-06T17:04:27.520Z], totalTime: Optional[PT0.015625S]]
+                System.out.println("Info: " + process.toString());
+                System.out.println("Info: " + process.info().toString());
+                //Info: [user: Optional[USER004\yctse], startTime: Optional[2023-11-06T17:04:27.520Z], totalTime: Optional[PT0.015625S]]
 
 
-        }catch (Exception e){
-            System.out.println("Exception : " + e.getMessage());
+            }catch (Exception e){
+                System.out.println("Exception : " + e.getMessage());
+            }
+
+
+        }else if(mouseEvent.equals(MouseEvent.MOUSE_EXITED)){
+            imageView.setImage(image0);
+
+
         }
+
+    }
+
+    @FXML
+    private void watchCourseAction(MouseEvent event) throws IOException {
+        System.out.println("watchCourseAction");
+        boolean disabledPane = false;
+//        watchPane
+        watchCourseSelect.setOpacity(1.0);
+        teamCourseSettingsSelect.setOpacity(0.0);
+
+        watchPane.setVisible(disabledPane);
+        tableView0.getColumns().clear();
+        tableViewAll.getColumns().clear();
+
+
+        classGridPane.setVisible(disabledPane);
+        courseGridPane.setVisible(disabledPane);
+
+        teamSelect1.setVisible(disabledPane);
+        teamSelect2.setVisible(disabledPane);
+        teamSelect3.setVisible(disabledPane);
+        teamSelect4.setVisible(disabledPane);
+
+        teamSelectPick1.setVisible(disabledPane);
+        teamSelectPick2.setVisible(disabledPane);
+        teamSelectedGridPane1.setVisible(disabledPane);
+        teamSelectedGridPane2.setVisible(disabledPane);
+
+        missionPane.setVisible(disabledPane);
+        missionTeamGridPane.setVisible(disabledPane);
+        missionMemberGridPane.setVisible(disabledPane);
+        missionUnitGridPane.setVisible(disabledPane);
+
+        courseSelect.setVisible(disabledPane);
+        teamSelect.setVisible(disabledPane);
+        missionSelect.setVisible(disabledPane);
+//        tmpImage = teamCourseSettings.getImage();
+
+        teamCourseSettingsSelect.setOpacity(0.0);
+        watchCourseSelect.setOpacity(0.0);
+
+        classGridPane.setVisible(disabledPane);
+        courseGridPane.setVisible(disabledPane);
+
+        tabBack.setVisible(disabledPane);
+
+        imgGradeClass.setVisible(disabledPane);
+        imgGradeCourse.setVisible(disabledPane);
+
+//        backImg.setImage(imageCourse3);
+        tips.setVisible(disabledPane);
+//        tips.setImage(imageTip5);
+
+        studentGradeSelect.setOpacity(0.0);
+        gradePane.setVisible(disabledPane);
+        tabGrade.setVisible(disabledPane);
+
+        gradeYearSelectGridPane.setVisible(disabledPane);
+        gradeClassSelectGridPane.setVisible(disabledPane);
+
+
+        watchPane.setVisible(true);
 
         tmpPos = 3;
     }
@@ -1935,6 +2026,7 @@ public class MsController {
     private void studentGradeAction(MouseEvent event) throws IOException {
         System.out.println("studentGradeAction");
 
+        watchPane.setVisible(false);
         tableView0.getColumns().clear();
         tableViewAll.getColumns().clear();
 
@@ -1964,6 +2056,7 @@ public class MsController {
 //        tmpImage = teamCourseSettings.getImage();
 
         teamCourseSettingsSelect.setOpacity(0.0);
+        watchCourseSelect.setOpacity(0.0);
 
         classGridPane.setVisible(disabledPane);
         courseGridPane.setVisible(disabledPane);
